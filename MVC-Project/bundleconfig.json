@@ -1,0 +1,51 @@
+[
+  {
+    "inputFiles": [
+      "wwwroot/css/material-design-iconic-font.min.css",
+      "wwwroot/css/font-awesome.min.css",
+      "wwwroot/css/fontawesome-stars.css",
+      "wwwroot/css/meanmenu.css",
+      "wwwroot/css/owl.carousel.min.css",
+      "wwwroot/css/slick.css",
+      "wwwroot/css/animate.css",
+      "wwwroot/css/jquery-ui.min.css",
+      "wwwroot/css/venobox.css",
+      "wwwroot/css/nice-select.css",
+      "wwwroot/css/magnific-popup.css",
+      "wwwroot/css/bootstrap.min.css",
+      "wwwroot/css/helper.css",
+      "wwwroot/css/style.css",
+      "wwwroot/css/responsive.css"
+    ],
+    "outputFileName": "wwwroot/css/min/all.css",
+    "minify": {"enabled": false}
+  },
+  {
+    "inputFiles": [
+      "wwwroot/js/vendor/jquery-1.12.4.min.js",
+      "wwwroot/js/vendor/popper.min.js",
+      "wwwroot/js/bootstrap.min.js",
+      "wwwroot/js/ajax-mail.js",
+      "wwwroot/js/jquery.meanmenu.min.js",
+      "wwwroot/js/wow.min.js",
+      "wwwroot/js/slick.min.js",
+      "wwwroot/js/owl.carousel.min.js",
+      "wwwroot/js/jquery.magnific-popup.min.js",
+      "wwwroot/js/isotope.pkgd.min.js",
+      "wwwroot/js/imagesloaded.pkgd.min.js",
+      "wwwroot/js/jquery.mixitup.min.js",
+      "wwwroot/js/jquery.countdown.min.js",
+      "wwwroot/js/jquery.counterup.min.js",
+      "wwwroot/js/waypoints.min.js",
+      "wwwroot/js/jquery.barrating.min.js",
+      "wwwroot/js/jquery-ui.min.js",
+      "wwwroot/js/venobox.min.js",
+      "wwwroot/js/jquery.nice-select.min.js",
+      "wwwroot/js/scrollUp.min.js",
+      "wwwroot/js/main.js"
+    ],
+    "outputFileName": "wwwroot/js/min/all.js",
+    "minify": { "enabled": false }
+
+  }
+]
