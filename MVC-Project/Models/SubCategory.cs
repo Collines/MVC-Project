@@ -1,13 +1,15 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
-namespace MVC_Project.Models
+namespace shopping.Models
 {
-    public class SubCategory
+    public class Subcategory
     {
         [Key]
-        public int SubCatId { get; set; }
-        public string SubCatName { get; set; }
-
-        public List<Product> PrdList { get; set; }
+        public int SubCategoryId { get; set; }
+        public string SubCategoryName { get; set; }
+        public int CategoryId { get; set; }
+        public virtual Category Category { get; set; }
+        public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
     }
 }

@@ -1,5 +1,6 @@
 using MVC_Project.Models;
 using Microsoft.EntityFrameworkCore;
+using shopping.Models;
 
 namespace MVC_Project
 {
@@ -8,7 +9,7 @@ namespace MVC_Project
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(
+            builder.Services.AddDbContext<AppDBContext>(options => options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnectionString")
                     ));
 

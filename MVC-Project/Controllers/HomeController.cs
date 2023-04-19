@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MVC_Project.Models;
+using shopping.Models;
 using System.Diagnostics;
 
 namespace MVC_Project.Controllers
@@ -8,14 +10,17 @@ namespace MVC_Project.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly AppDBContext _context;
+        public HomeController(ILogger<HomeController> logger, AppDBContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var all_cate = _context.Categories.Include(x => x.SubCategories).ToList();
+            return View(all_cate);
         }
 
         public IActionResult Privacy()
