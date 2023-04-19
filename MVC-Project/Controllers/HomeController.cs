@@ -21,6 +21,7 @@ namespace MVC_Project.Controllers
         {
             var all_cate = _context.Categories.Include(x => x.SubCategories).ToList();
             return View(all_cate);
+            // return View();
         }
 
         public IActionResult Privacy()

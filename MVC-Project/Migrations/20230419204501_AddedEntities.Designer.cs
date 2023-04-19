@@ -12,8 +12,8 @@ using shopping.Models;
 namespace MVC_Project.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230419143217_initialCreate")]
-    partial class initialCreate
+    [Migration("20230419204501_AddedEntities")]
+    partial class AddedEntities
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -5,7 +5,7 @@
 namespace MVC_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class AddedEntities : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
