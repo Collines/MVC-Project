@@ -40,26 +40,28 @@ namespace MVC_Project.Controllers
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
-            AppDBContext DB = new AppDBContext();
-            Account? account = DB.Accounts.FirstOrDefault(A => A.Email == email);
-            if (account != null)
-            {
-                if (PasswordHandler.VerifyPassword(password, account.Password, Convert.FromHexString(account.HashSalt)))
+            using(AppDBContext DB = new AppDBContext())
+            {   
+                Account? account = DB.Accounts.FirstOrDefault(A => A.Email == email);
+                if (account != null)
                 {
-                    ViewBag.Msg = $"{account.Email} Login Successfully!";
-                    ViewBag.Type = "alert-success d-block";
-                    return View("Index");
+                    if (PasswordHandler.VerifyPassword(password, account.Password, Convert.FromHexString(account.HashSalt)))
+                    {
+                        ViewBag.Msg = $"{account.Email} Login Successfully!";
+                        ViewBag.Type = "alert-success d-block";
+                        return View("Index");
+                    }
+                    else
+                    {
+                        ViewBag.Msg = $"{account.Email} Login Failed!";
+                        ViewBag.Type = "alert-danger d-block";
+                        return View("Index");
+                    }
                 }
-                else
-                {
-                    ViewBag.Msg = $"{account.Email} Login Failed!";
-                    ViewBag.Type = "alert-danger d-block";
-                    return View("Index");
-                }
+                ViewBag.Msg = "Login Failed!";
+                ViewBag.Type = "alert-danger d-block";
+                return View("Index");
             }
-            ViewBag.Msg = "Login Failed!";
-            ViewBag.Type = "alert-danger d-block";
-            return View("Index");
         }
 
     }
