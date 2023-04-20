@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC_Project.Models;
-using shopping.Models;
 using System.Diagnostics;
 
 namespace MVC_Project.Controllers
@@ -19,9 +18,14 @@ namespace MVC_Project.Controllers
 
         public IActionResult Index()
         {
-            var all_cate = _context.Categories.Include(x => x.SubCategories).ToList();
-            return View(all_cate);
-            // return View();
+            //var all_cate = _context.Categories.Include(x => x.SubCategories).ToList();
+            //return View(all_cate);
+            return View();
+        }
+
+        public IActionResult Forbidden()
+        {
+            return View("Forbidden");
         }
 
         public IActionResult Privacy()
