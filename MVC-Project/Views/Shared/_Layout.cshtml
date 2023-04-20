@@ -1,4 +1,9 @@
-﻿@model IEnumerable<shopping.Models.Category>
+﻿@using Microsoft.EntityFrameworkCore;
+@using shopping.Models;
+@{
+    AppDBContext DB = new AppDBContext();
+    IEnumerable<Category> Categories = DB.Categories.ToList();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -372,7 +377,7 @@
                                             </div>
                                             <div id="cate-toggle" class="category-menu-list" style="display:none!important">
                                                 <ul>
-                                                @foreach (var category in Model)
+                                                @foreach (var category in Categories)
                                                 {
                                                     @*-------------------*@
                                                     @if (category.SubCategories.Count() != 0)
