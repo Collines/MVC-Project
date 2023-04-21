@@ -26,9 +26,13 @@ namespace MVC_Project
                 options.ExpireTimeSpan = TimeSpan.FromDays(30);
                 options.SlidingExpiration = true;
                 options.AccessDeniedPath = "/Home/Forbidden";
+                options.LoginPath = "/Account/Index";
+                //options.ReturnUrlParameter = "/Account/Dashboard";
             });
 
             builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
+
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 

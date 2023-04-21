@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using MVC_Project.Helpers;
 using MVC_Project.Interfaces;
 using MVC_Project.Models.Identity;
+using System.Security.Claims;
 
 namespace MVC_Project.Controllers
 {
@@ -17,20 +22,37 @@ namespace MVC_Project.Controllers
 
         public IActionResult Index()
         {
+            if(User.Identity.IsAuthenticated)
+            {
+                return View("Dashboard");
+            }
             return View();
         }
+        [Authorize]
+		public IActionResult Dashboard()
+		{
+			return View();
+		}
 
-        [HttpPost]
-        public IActionResult Register(Account account)
+		[HttpPost]
+        public async Task<IActionResult> Register(Account account)
         {
             if(ModelState.IsValid)
             {
                 account.Password = PasswordHandler.Hash(account.Password, out byte[] Salt);
                 account.HashSalt = Convert.ToHexString(Salt);
                 AccRepo.Insert(account);
-                ViewBag.Msg = $"{account.Email} Created Successfully!";
-                ViewBag.Type = "alert-success d-block";
-                return View("Index");
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Email, account.Email),
+                    new Claim(ClaimTypes.Name, $"{account.Firstname} {account.Lastname}"),
+                    new Claim("Password", account.Password),
+                    new Claim(ClaimTypes.Role, account.UserRole.ToString()),
+                };
+                var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                return RedirectToAction("Dashboard");
             }
             ViewBag.Msg = "Account is not Created!";
             ViewBag.Type = "alert-danger d-block";
@@ -38,7 +60,7 @@ namespace MVC_Project.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
             using(AppDBContext DB = new AppDBContext())
             {   
@@ -47,13 +69,21 @@ namespace MVC_Project.Controllers
                 {
                     if (PasswordHandler.VerifyPassword(password, account.Password, Convert.FromHexString(account.HashSalt)))
                     {
-                        ViewBag.Msg = $"{account.Email} Login Successfully!";
-                        ViewBag.Type = "alert-success d-block";
-                        return View("Index");
+						var claims = new List<Claim>
+		                {
+			                new Claim(ClaimTypes.Email, email),
+                            new Claim(ClaimTypes.Name, $"{account.Firstname} {account.Lastname}"),
+                            new Claim("Password", password),
+		                };
+
+						var claimsIdentity = new ClaimsIdentity(
+							claims, CookieAuthenticationDefaults.AuthenticationScheme);
+						await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+						return RedirectToAction("Dashboard");
                     }
                     else
                     {
-                        ViewBag.Msg = $"{account.Email} Login Failed!";
+                        ViewBag.Msg = "Wrong Credentials!";
                         ViewBag.Type = "alert-danger d-block";
                         return View("Index");
                     }
@@ -62,6 +92,18 @@ namespace MVC_Project.Controllers
                 ViewBag.Type = "alert-danger d-block";
                 return View("Index");
             }
+        }
+
+        [HttpGet]
+
+        public async Task<IActionResult> Logout()
+        {
+            if(User.Identity.IsAuthenticated)
+            {
+				await HttpContext.SignOutAsync(
+		            CookieAuthenticationDefaults.AuthenticationScheme);
+			}
+            return View("Index");
         }
 
     }
