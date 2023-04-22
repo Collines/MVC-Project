@@ -70,4 +70,11 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Vendor\Controllers\" />
+    <Folder Include="Areas\Vendor\Data\" />
+    <Folder Include="Areas\Vendor\Models\" />
+    <Folder Include="Areas\Vendor\Views\" />
+  </ItemGroup>
+
 </Project>

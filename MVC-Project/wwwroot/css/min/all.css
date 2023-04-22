@@ -15751,7 +15751,7 @@ text-align: center;
 	left: 0;
 	top: calc(100% - 1px);
 	display: none;
-	width: 100%;
+	width:400%;
 	border: 1px solid #e7e7e7;
 	z-index: 9;
 }

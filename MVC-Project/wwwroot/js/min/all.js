@@ -389,7 +389,7 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
 	/*-- Category Menu Toggles --*/
 	function categorySubMenuToggle() {
 	    var screenSize = $(window).width();
-	    if ( screenSize <= 991) {
+	    if ( screenSize <= 100/*991*/) {
 	        $('#cate-toggle .right-menu > a').prepend('<i class="expand menu-expand"></i>');
 	        $('.category-menu .right-menu ul').slideUp();
 	        $('.category-menu .menu-item-has-children i').on('click', function(e){
@@ -408,9 +408,9 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
 	/*-- Category Sub Menu --*/
 	function categoryMenuHide(){
 	    var screenSize = $(window).width();
-	    if ( screenSize <= 991) {
+	    /*if ( screenSize <= 991) {
 	        $('.category-menu-list').hide();
-	    } /*else {
+	    } else {
 	        $('.category-menu-list').show();
 	    }*/
 	}
