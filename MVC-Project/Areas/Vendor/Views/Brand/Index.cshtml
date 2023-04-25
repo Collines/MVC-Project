@@ -1,0 +1,64 @@
+﻿@model IEnumerable<shopping.Models.Brand>
+
+@{
+    ViewData["Title"] = "Brands";
+    Layout = "~/Areas/Vendor/Views/Shared/_VendorLayout.cshtml";
+    ViewData["Page"] = "Brand";
+
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            <a href="/Vendor/Brand/Create"><button type="button" class="btn btn-block btn-success">Create New</button></a>
+        </div>
+        <div class="card-tools">
+            <ul class="pagination pagination-sm float-right">
+                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 10px">@Html.DisplayNameFor(model => model.Id)</th>
+                    <th>@Html.DisplayNameFor(model => model.Name)</th>
+                    <th>Actions</th>
+                    <th style="width: 40px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count() > 0)
+                {
+                    foreach (Brand P in Model)
+                    {
+                        <tr>
+                            <td>@P.Id</td>
+                            <td>@P.Name</td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a href="/Vendor/Brand/Details/@P.Id" class="mr-2"><button type="button" class="btn btn-block btn-info">View</button></a>
+                                    <a href="/Vendor/Brand/Edit/@P.Id" class="mr-2"><button type="button" class="btn btn-block btn-primary">Edit</button></a>
+                                    <a href="/Vendor/Brand/Delete/@P.Id"><button type="button" class="btn btn-block btn-danger">Delete</button></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr class="text-center">
+                        <td colspan="3">No Brands found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
