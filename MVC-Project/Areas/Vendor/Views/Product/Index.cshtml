@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Product>
+
+@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Areas/Vendor/Views/Shared/_VendorLayout.cshtml";
+    ViewData["Page"] = "Product";
+    AppDBContext DB = new();
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            <a href="/Vendor/Product/Create"><button type="button" class="btn btn-block btn-success">Add New</button></a>
+        </div>
+        <div class="card-tools">
+            <ul class="pagination pagination-sm float-right">
+                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 10px">@Html.DisplayNameFor(model => model.ProductId)</th>
+                    <th style="width: 10px">Image</th>
+                    <th>@Html.DisplayNameFor(model => model.ProductName)</th>
+                    <th>Subcategory</th>
+                    <th>Brand</th>
+                    <th>@Html.DisplayNameFor(model => model.Quantity)</th>
+                    <th>Actions</th>
+                    <th style="width: 40px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model.Count() > 0)
+                {
+                    foreach (Product P in Model)
+                    {
+                        Image img = DB.Images.FirstOrDefault(I => I.ProductId == P.ProductId);
+                        string imageDataURL = "";
+                        if(img!=null)
+                        {
+                            string imageBase64Data = Convert.ToBase64String(img.ImageData);
+                            string imgType = img.Title.Split(".")[img.Title.Split(".").Length - 1];
+                            imageDataURL = string.Format($"data:image/{imgType};base64,{imageBase64Data}")??"";
+                        }
+                        <tr>
+                            <td>@P.ProductId</td>
+                            <td><img style="max-width:100%;max-height:100%" src="@imageDataURL" title="@img?.Title"/></td>
+                            <td>@P.ProductName</td>
+                            <td>@P.SubCategory.SubCategoryName</td>
+                            <td>@P.Brand.Name</td>
+                            <td>@P.Quantity</td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a href="/Vendor/Product/Details/@P.ProductId" class="mr-2"><button type="button" class="btn btn-block btn-info">View</button></a>
+                                    <a href="/Vendor/Product/Edit/@P.ProductId" class="mr-2"><button type="button" class="btn btn-block btn-primary">Edit</button></a>
+                                    <a href="/Vendor/Product/Delete/@P.ProductId"><button type="button" class="btn btn-block btn-danger">Delete</button></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                } else
+                {
+                    <tr class="text-center">
+                            <td colspan="3">No Products found</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>

@@ -1,4 +1,5 @@
 [
+  // main site
   {
     "inputFiles": [
       "wwwroot/css/material-design-iconic-font.min.css",
@@ -18,7 +19,7 @@
       "wwwroot/css/responsive.css"
     ],
     "outputFileName": "wwwroot/css/min/all.css",
-    "minify": {"enabled": false}
+    "minify": { "enabled": false }
   },
   {
     "inputFiles": [
@@ -49,5 +50,25 @@
     "outputFileName": "wwwroot/js/min/all.js",
     "minify": { "enabled": false }
 
+  },
+  // Vendor Dashboard
+  {
+    "inputFiles": [
+      "wwwroot/Vendor/css/all.min.css",
+      "wwwroot/Vendor/css/AdminLTE.min.css"
+    ],
+    "outputFileName": "wwwroot/css/min/vendor.css",
+    "minify": { "enabled": false }
+  },
+  // Vendor Dashboard
+  {
+    "inputFiles": [
+      "wwwroot/js/vendor/jquery-1.12.4.min.js",
+      "wwwroot/js/vendor/popper.min.js",
+      "wwwroot/js/bootstrap.min.js",
+      "wwwroot/Vendor/js/AdminLTE.min.js"
+    ],
+    "outputFileName": "wwwroot/js/min/vendor.js",
+    "minify": { "enabled": false }
   }
 ]

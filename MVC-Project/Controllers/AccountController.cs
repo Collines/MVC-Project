@@ -69,11 +69,12 @@ namespace MVC_Project.Controllers
                 {
                     if (PasswordHandler.VerifyPassword(password, account.Password, Convert.FromHexString(account.HashSalt)))
                     {
-						var claims = new List<Claim>
-		                {
-			                new Claim(ClaimTypes.Email, email),
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Email, email),
                             new Claim(ClaimTypes.Name, $"{account.Firstname} {account.Lastname}"),
                             new Claim("Password", password),
+                            new Claim(ClaimTypes.Role, account.UserRole.ToString())
 		                };
 
 						var claimsIdentity = new ClaimsIdentity(

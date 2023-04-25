@@ -10,7 +10,6 @@ namespace shopping.Models
 
         [ForeignKey("Account")]
         [Required]
-
         public int AccountID { get; set; }
 
         [ForeignKey("Product")]

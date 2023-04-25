@@ -8,9 +8,10 @@ namespace shopping.Models
 
         [Key]
         public int CategoryId { get; set; }
+
+        [Display(Name ="Category Name")]
         public string CategoryName { get; set; }
         public virtual ICollection<Subcategory> SubCategories { get; set; } = new HashSet<Subcategory>();
-        public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
     }
     
 }

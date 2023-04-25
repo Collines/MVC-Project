@@ -44,6 +44,17 @@ namespace MVC_Project
                 app.UseHsts();
             }
 
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/Home/Notfound";
+                    await next();
+                }
+            });
+
+            //app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -54,19 +65,25 @@ namespace MVC_Project
 
             app.MapRazorPages();
             app.MapControllerRoute(
-                  name: "areas",
-                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                name: "areas",
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+              );
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-
             //app.UseEndpoints(endpoints =>
             //{
             //  endpoints.MapControllerRoute(
             //    name : "areas",
             //    pattern : "{area:exists}/{controller=Home}/{action=Index}/{id?}"
             //  );
+            //    endpoints.MapControllerRoute(
+            //    name: "default",
+            //    pattern: "{controller=Home}/{action=Index}/{id?}");
             //});
+
+            //app.UseStatusCodePagesWithRedirects("/Home/Notfound/{0}");
+
 
             app.Run();
         }

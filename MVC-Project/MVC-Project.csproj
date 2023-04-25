@@ -14,7 +14,7 @@
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
-    <None Include="Views\_ViewImports.cshtml" />
+    <None Include="_ViewImports.cshtml" />
     <None Include="Views\_ViewStart.cshtml" />
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map" />
@@ -71,10 +71,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Vendor\Controllers\" />
     <Folder Include="Areas\Vendor\Data\" />
     <Folder Include="Areas\Vendor\Models\" />
-    <Folder Include="Areas\Vendor\Views\" />
   </ItemGroup>
 
 </Project>

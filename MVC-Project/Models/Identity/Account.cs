@@ -47,6 +47,9 @@ namespace MVC_Project.Models.Identity
         [HiddenInput]
         public string? HashSalt { get; set; }
 
+        //[DataType(DataType.Upload)]
+        //public byte[] ProfileImage { get; set; }
+
         public bool isActive { get; set; } = true;
 
         [Required]
