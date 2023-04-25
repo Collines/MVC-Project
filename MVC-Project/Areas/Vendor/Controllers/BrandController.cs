@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using shopping.Models;
 namespace MVC_Project.Areas.Vendor.Controllers
 {
     [Area("Vendor")]
+    [Authorize(Roles = "Vendor")]
     public class BrandController : Controller
     {
         private readonly AppDBContext _context;
