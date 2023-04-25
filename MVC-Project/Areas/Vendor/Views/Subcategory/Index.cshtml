@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Subcategory>
+@{
+    ViewData["Title"] = "Subcategories";
+    Layout = "~/Areas/Vendor/Views/Shared/_VendorLayout.cshtml";
+    ViewData["Action"] = "Index";
+    ViewData["Page"] = "Subcategory";
+
+}
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            <a href="/Vendor/SubCategory/Create"><button type="button" class="btn btn-block btn-success">Create New</button></a>
+        </div>
+        <div class="card-tools">
+            <ul class="pagination pagination-sm float-right">
+                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 10px">ID</th>
+                    <th>Subcategory Name</th>
+                    <th>Category Name</th>
+                    <th>Actions</th>
+                    <th style="width: 40px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Subcategory scat in Model)
+                {
+                    <tr>
+                        <td>@scat.SubCategoryId</td>
+                        <td>@scat.SubCategoryName</td>
+                        <td>@scat.Category.CategoryName</td>
+                        <td>
+                            <div class="d-inline-flex">
+                                <a href="/Vendor/SubCategory/Details/@scat.SubCategoryId" class="mr-2"><button type="button" class="btn btn-block btn-info">View</button></a>
+                                <a href="/Vendor/SubCategory/Edit/@scat.SubCategoryId" class="mr-2"><button type="button" class="btn btn-block btn-primary">Edit</button></a>
+                                <a href="/Vendor/SubCategory/Delete/@scat.SubCategoryId"><button type="button" class="btn btn-block btn-danger">Delete</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
