@@ -1,6 +1,9 @@
 using MVC_Project.Models;
 using Microsoft.EntityFrameworkCore;
-using shopping.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using MVC_Project.Interfaces;
+using MVC_Project.Models.Identity;
+using MVC_Project.Repositories;
 
 namespace MVC_Project
 {
@@ -13,11 +16,23 @@ namespace MVC_Project
                     builder.Configuration.GetConnectionString("DefaultConnectionString")
                     ));
 
-
+            builder.Services.AddRazorPages();
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.ExpireTimeSpan = TimeSpan.FromDays(30);
+                options.SlidingExpiration = true;
+                options.AccessDeniedPath = "/Home/Forbidden";
+                options.LoginPath = "/Account/Index";
+                //options.ReturnUrlParameter = "/Account/Dashboard";
+            });
+
+            builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
+
+            builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
 
@@ -34,11 +49,24 @@ namespace MVC_Project
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
+            app.MapRazorPages();
+            app.MapControllerRoute(
+                  name: "areas",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            //app.UseEndpoints(endpoints =>
+            //{
+            //  endpoints.MapControllerRoute(
+            //    name : "areas",
+            //    pattern : "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            //  );
+            //});
 
             app.Run();
         }
