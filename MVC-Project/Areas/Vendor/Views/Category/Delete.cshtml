@@ -1,0 +1,21 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "../Shared/_VendorLayout.cshtml";
+
+}
+<div class="modal-content bg-danger">
+    <div class="modal-header">
+        <h4 class="modal-title">Are you sure you want to delete @Model.CategoryName?</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <a asp-action="Index"><span aria-hidden="true">×</span></a>
+        </button>
+    </div>
+    <div class="modal-footer justify-content-between">
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="CategoryId" />
+            <input type="submit" value="Delete" class="btn btn-outline-light mr-2" />
+            <a asp-action="Index"><button type="button" class="btn btn-outline-light">Back</button></a>
+        </form>
+    </div>
+</div>

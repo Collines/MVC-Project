@@ -1,0 +1,75 @@
+﻿@model Category;
+@{
+    ViewData["Title"] = Model.CategoryName + " Details";
+    Layout = "../Shared/_VendorLayout.cshtml";
+
+}
+
+<div>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CategoryName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CategoryName)
+        </dd>
+    </dl>
+</div>
+<div>
+</div>
+
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title font-weight-bold">@Model.CategoryName Subcategories</h3>
+
+        <div class="card-tools">
+            <ul class="pagination pagination-sm float-right">
+                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 10px">ID</th>
+                    <th>Subcategory Name</th>
+                    <th>Actions</th>
+                    <th style="width: 40px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.SubCategories.Count > 0)
+                {
+                    foreach (Subcategory subCat in Model.SubCategories)
+                    {
+                        <tr>
+                            <td>@subCat.SubCategoryId</td>
+                            <td>@subCat.SubCategoryName</td>
+                            <td>
+                                <div class="d-inline-flex">
+                                    <a href="/Vendor/SubCategory/Details/@subCat.SubCategoryId" class="mr-2"><button type="button" class="btn btn-block btn-info">View</button></a>
+                                    <a href="/Vendor/SubCategory/Edit/@subCat.SubCategoryId" class="mr-2"><button type="button" class="btn btn-block btn-primary">Edit</button></a>
+                                    <a href="/Vendor/SubCategory/Delete/@subCat.SubCategoryId"><button type="button" class="btn btn-block btn-danger">Delete</button></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                } else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center">No Subcategories</td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>
