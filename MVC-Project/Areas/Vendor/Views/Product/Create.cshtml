@@ -1,0 +1,98 @@
+﻿@model shopping.Models.Product
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Vendor/Views/Shared/_VendorLayout.cshtml";
+}
+
+<h1>Create</h1>
+
+<h4>Product</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="price" class="control-label"></label>
+                <input asp-for="price" class="form-control" />
+                <span asp-validation-for="price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BrandID" class="control-label"></label>
+                <select asp-for="BrandID" class ="form-control" asp-items="ViewBag.BrandID"></select>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
+                </label>
+            </div>
+            <div class="form-group">
+                <label>Subcategory</label>
+                <select name="SubCategoryId" class="form-control">
+                    @foreach (Category c in ViewBag.Categories)
+                    {
+                        <optgroup label="@c.CategoryName">
+                            @foreach(Subcategory sc in c.SubCategories)
+                            {
+                                <option value="@sc.SubCategoryId">@sc.SubCategoryName</option>
+                            }
+                        </optgroup>
+                    }
+                </select>
+            </div>
+@*            <div class="form-group">
+                <label asp-for="Images" class="control-label"></label>
+                <input type="file" name="Images" id="Images" />
+            </div>*@
+            <div class="form-group">
+                <label for="Images">Product Images</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="Images" id="Images" multiple>
+                        <label class="custom-file-label" for="Images">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text">Upload</span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section scripts {
+    <script>
+        function logSelection(event) {
+            const selection = event.target.value.substring(
+                event.target.selectionStart,
+                event.target.selectionEnd
+            );
+            console.log(`You selected: ${selection}`)
+        }
+
+        const input = document.getElementById("categorySelect")
+        input.addEventListener("select", logSelection);
+    </script>
+}

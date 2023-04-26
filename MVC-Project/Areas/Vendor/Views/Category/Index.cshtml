@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Category>
+
+@{
+    ViewData["Title"] = "Categories";
+    Layout = "../Shared/_VendorLayout.cshtml";
+    ViewData["Page"] = "Category";
+
+}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            <a href="/Vendor/Category/Create"><button type="button" class="btn btn-block btn-success">Create New</button></a>
+        </div>
+        <div class="card-tools">
+            <ul class="pagination pagination-sm float-right">
+                <li class="page-item"><a class="page-link" href="#">«</a></li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item"><a class="page-link" href="#">»</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 10px">@Html.DisplayNameFor(model => model.CategoryId)</th>
+                    <th>@Html.DisplayNameFor(model => model.CategoryName)</th>
+                    <th>Actions</th>
+                    <th style="width: 40px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach(Category cat in Model)
+                {
+                    <tr>
+                        <td>@cat.CategoryId</td>
+                        <td>@cat.CategoryName</td>
+                        <td>
+                            <div class="d-inline-flex">
+                                <a href="/Vendor/Category/Details/@cat.CategoryId" class="mr-2"><button type="button" class="btn btn-block btn-info">View</button></a>
+                                <a href="/Vendor/Category/Edit/@cat.CategoryId" class="mr-2"><button type="button" class="btn btn-block btn-primary">Edit</button></a>
+                                <a href="/Vendor/Category/Delete/@cat.CategoryId"><button type="button" class="btn btn-block btn-danger">Delete</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.card-body -->
+</div>

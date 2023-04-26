@@ -1,0 +1,23 @@
+﻿@model Category
+@{
+    ViewData["Title"] = "Create Category";
+    Layout = "../Shared/_VendorLayout.cshtml";
+
+}
+<div class="card card-primary">
+
+    <form asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="card-body">
+            <div class="form-group">
+                <label asp-for="CategoryName"></label>
+                <input asp-for="CategoryName" class="form-control" />
+                <span asp-validation-for="CategoryName" class="text-danger"></span>
+            </div>
+            
+        </div>
+        <div class="card-footer text-center">
+                <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form>
+</div>

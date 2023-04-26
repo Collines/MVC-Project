@@ -1,13 +1,15 @@
-﻿using shopping.Models;
+﻿using Microsoft.Build.Framework;
+using shopping.Models;
 
-namespace OnlineShopping.Models
+namespace shopping.Models
 {
     public class Brand
     {
         public int Id { get; set; }
-        public string Name { get; set; }
 
-        //public int ProductId { get; set; }
-        //public Product product { get; set; }
+        [Required]
+        public required string Name { get; set; }
+
+        public virtual ICollection<Product> Products { get; set; } = new HashSet<Product>();
     }
 }

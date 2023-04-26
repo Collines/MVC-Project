@@ -28,6 +28,11 @@ namespace MVC_Project.Controllers
             return View("Forbidden");
         }
 
+        public IActionResult Notfound()
+        {
+            return View("NotFound");
+        }
+
         public IActionResult Privacy()
         {
             return View();

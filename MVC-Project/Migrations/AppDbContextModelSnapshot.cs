@@ -66,6 +66,23 @@ namespace MVC_Project.Migrations
                     b.ToTable("Accounts");
                 });
 
+            modelBuilder.Entity("shopping.Models.Brand", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Brands");
+                });
+
             modelBuilder.Entity("shopping.Models.Category", b =>
                 {
                     b.Property<int>("CategoryId")
@@ -83,6 +100,32 @@ namespace MVC_Project.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("shopping.Models.Image", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<byte[]>("ImageData")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Images");
+                });
+
             modelBuilder.Entity("shopping.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
@@ -91,19 +134,33 @@ namespace MVC_Project.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
 
-                    b.Property<int>("CategoryId")
+                    b.Property<int>("BrandID")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("SubCategoryId")
-                        .HasColumnType("int");
+                    b.Property<float>("price")
+                        .HasColumnType("real");
 
                     b.HasKey("ProductId");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("BrandID");
 
                     b.HasIndex("SubCategoryId");
 
@@ -132,19 +189,53 @@ namespace MVC_Project.Migrations
                     b.ToTable("Subcategories");
                 });
 
+            modelBuilder.Entity("shopping.Models.Wishlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccountID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountID");
+
+                    b.HasIndex("ProductID");
+
+                    b.ToTable("Wishlists");
+                });
+
+            modelBuilder.Entity("shopping.Models.Image", b =>
+                {
+                    b.HasOne("shopping.Models.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("shopping.Models.Product", b =>
                 {
-                    b.HasOne("shopping.Models.Category", "Category")
+                    b.HasOne("shopping.Models.Brand", "Brand")
                         .WithMany("Products")
-                        .HasForeignKey("CategoryId")
+                        .HasForeignKey("BrandID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("shopping.Models.Subcategory", "SubCategory")
                         .WithMany("Products")
-                        .HasForeignKey("SubCategoryId");
+                        .HasForeignKey("SubCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Category");
+                    b.Navigation("Brand");
 
                     b.Navigation("SubCategory");
                 });
@@ -160,11 +251,38 @@ namespace MVC_Project.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("shopping.Models.Category", b =>
+            modelBuilder.Entity("shopping.Models.Wishlist", b =>
+                {
+                    b.HasOne("MVC_Project.Models.Identity.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("shopping.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("shopping.Models.Brand", b =>
                 {
                     b.Navigation("Products");
+                });
 
+            modelBuilder.Entity("shopping.Models.Category", b =>
+                {
                     b.Navigation("SubCategories");
+                });
+
+            modelBuilder.Entity("shopping.Models.Product", b =>
+                {
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("shopping.Models.Subcategory", b =>

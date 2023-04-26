@@ -25,8 +25,11 @@ namespace MVC_Project
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Subcategory> Subcategories { get; set; }
+        public DbSet<Brand> Brands { get; set; }
         public DbSet<Product> Products { get; set; }
-
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Wishlist> Wishlists { get; set; }
+        public DbSet<Image> Images { get; set; }
+        
     }
 }
