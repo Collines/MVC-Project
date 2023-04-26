@@ -13,20 +13,20 @@ namespace shopping.Models
 
         [Required]
         [MaxLength(100)]
-        public string ProductName { get; set; }
+        public required string ProductName { get; set; }
 
         [Required]
-        public string description { get; set; }
+        public required string description { get; set; }
 
         [Required]
         [Range(0, float.MaxValue)]
         [DataType(DataType.Currency)]
-        public float price { get; set; }
+        public required float price { get; set; }
 
         [Range(1,int.MaxValue)]
         [Required]
         [RegularExpression("([1-9][0-9]*)")]
-        public int Quantity { get; set; }
+        public required int Quantity { get; set; }
         //public float ? Discount { get; set; }
         //public float Rate { get; set; }
         //List<string> Images { get; set; }   
@@ -35,7 +35,7 @@ namespace shopping.Models
 
         [Required]
         [ForeignKey("Brand")]
-        public int BrandID { get; set; }
+        public required int BrandID { get; set; }
         //public string color { get; set; }
         //public bool IsHotDeal { get; set; }
         //public bool IsFeatured { get; set; }
@@ -48,7 +48,7 @@ namespace shopping.Models
         [Required]
         [ForeignKey("SubCategory")]
 
-        public int SubCategoryId { get; set; }
+        public required int SubCategoryId { get; set; }
         public virtual Brand? Brand { get; set; }
         public virtual Subcategory? SubCategory { get; set; }
         //public virtual Category? Category { get; set; }

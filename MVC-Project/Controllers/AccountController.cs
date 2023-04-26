@@ -20,23 +20,43 @@ namespace MVC_Project.Controllers
 
         public IRepository<Account> AccRepo { get; }
 
-        public IActionResult Index()
-        {
-            if(User.Identity.IsAuthenticated)
-            {
-                return View("Dashboard");
-            }
-            return View();
-        }
         [Authorize]
 		public IActionResult Dashboard()
 		{
-			return View();
+            if (User.Identity.IsAuthenticated)
+            {
+                return View();
+            }
+            return RedirectToAction("Login");
 		}
 
-		[HttpPost]
+        [HttpGet]
+        public IActionResult Register()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard");
+            }
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Login()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Dashboard");
+            }
+            return View();
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Register(Account account)
         {
+            Account? EmailExist = AccRepo.GetAll()?.Find(A=>A.Email == account.Email);
+            if (EmailExist != null)
+                ModelState.AddModelError("Email", "Email Already Exists");
+
             if(ModelState.IsValid)
             {
                 account.Password = PasswordHandler.Hash(account.Password, out byte[] Salt);
@@ -54,9 +74,7 @@ namespace MVC_Project.Controllers
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
                 return RedirectToAction("Dashboard");
             }
-            ViewBag.Msg = "Account is not Created!";
-            ViewBag.Type = "alert-danger d-block";
-            return View("Index");
+            return View();
         }
 
         [HttpPost]
@@ -83,15 +101,9 @@ namespace MVC_Project.Controllers
 						return RedirectToAction("Dashboard");
                     }
                     else
-                    {
-                        ViewBag.Msg = "Wrong Credentials!";
-                        ViewBag.Type = "alert-danger d-block";
-                        return View("Index");
-                    }
+                        return View();
                 }
-                ViewBag.Msg = "Login Failed!";
-                ViewBag.Type = "alert-danger d-block";
-                return View("Index");
+                return View();
             }
         }
 
@@ -104,7 +116,7 @@ namespace MVC_Project.Controllers
 				await HttpContext.SignOutAsync(
 		            CookieAuthenticationDefaults.AuthenticationScheme);
 			}
-            return View("Index");
+            return RedirectToAction("Login");
         }
 
     }

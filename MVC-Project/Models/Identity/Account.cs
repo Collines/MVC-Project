@@ -19,23 +19,22 @@ namespace MVC_Project.Models.Identity
         [MaxLength(30)]
         [Required]
         [Display(Name ="First Name")]
-        public string Firstname { get; set; }
+        public required string Firstname { get; set; }
 
         [MaxLength(30)]
         [Required]
         [Display(Name = "Last Name")]
 
-        public string Lastname { get; set; }
+        public required string Lastname { get; set; }
 
         [MaxLength(50)]
         [Required]
         [DataType(DataType.EmailAddress)]
-        [IsUnique(ErrorMessage ="This Email already exist")]
-        public string Email { get; set; }
+        public required string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public required string Password { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
@@ -50,7 +49,7 @@ namespace MVC_Project.Models.Identity
         //[DataType(DataType.Upload)]
         //public byte[] ProfileImage { get; set; }
 
-        public bool isActive { get; set; } = true;
+        public bool IsActive { get; set; } = true;
 
         [Required]
         [EnumDataType(enumType:typeof(Role))]

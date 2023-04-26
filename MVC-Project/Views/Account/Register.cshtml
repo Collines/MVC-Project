@@ -1,0 +1,57 @@
+﻿@model MVC_Project.Models.Identity.Account
+@{
+    ViewData["Title"] = "Register Account";
+}
+@section fluid {
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Register</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xs-12">
+        <form action="/Account/Register" method="post">
+            <div class="login-form">
+                <h4 class="login-title">Register</h4>
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <div class="row">
+
+                    <div class="col-md-6 col-12 mb-20">
+                        <label asp-for="Firstname"></label>
+                        <input asp-for="Firstname" class="mb-0" placeholder="First Name" />
+                        <span asp-validation-for="Firstname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 col-12 mb-20">
+                        <label asp-for="Lastname"></label>
+                        <input asp-for="Lastname" class="mb-0" placeholder="Last Name" />
+                        <span asp-validation-for="Lastname" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-12 mb-20">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="mb-0" placeholder="Email address" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-20">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="mb-0" placeholder="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-20">
+                        <label asp-for="ConfirmPassowrd"></label>
+                        <input asp-for="ConfirmPassowrd" class="mb-0" placeholder="Confirm Password" />
+                        <span asp-validation-for="ConfirmPassowrd" class="text-danger"></span>
+                    </div>
+                    <div class="col-12">
+                        <button class="register-button mt-0">Register</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using MVC_Project.Interfaces;
 using MVC_Project.Models.Identity;
 using MVC_Project.Repositories;
+using Microsoft.Data.SqlClient;
 
 namespace MVC_Project
 {
@@ -26,7 +27,7 @@ namespace MVC_Project
                 options.ExpireTimeSpan = TimeSpan.FromDays(30);
                 options.SlidingExpiration = true;
                 options.AccessDeniedPath = "/Home/Forbidden";
-                options.LoginPath = "/Account/Index";
+                options.LoginPath = "/Account/Login";
                 //options.ReturnUrlParameter = "/Account/Dashboard";
             });
 
@@ -69,20 +70,13 @@ namespace MVC_Project
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
               );
             app.MapControllerRoute(
+                name: "Account",
+                pattern: "Account/{action=Dashboard}",
+                defaults: new { controller = "Account", action = "Dashboard"});
+
+            app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
-            //app.UseEndpoints(endpoints =>
-            //{
-            //  endpoints.MapControllerRoute(
-            //    name : "areas",
-            //    pattern : "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-            //  );
-            //    endpoints.MapControllerRoute(
-            //    name: "default",
-            //    pattern: "{controller=Home}/{action=Index}/{id?}");
-            //});
-
-            //app.UseStatusCodePagesWithRedirects("/Home/Notfound/{0}");
 
 
             app.Run();
