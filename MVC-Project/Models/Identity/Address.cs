@@ -5,7 +5,8 @@ namespace MVC_Project.Models.Identity
 {
     public class Address
     {
-        int Id { get; set; }
+        [Key]
+        public int Id { get; set; }
         [Required]
         public required string Addr { get; set; }
 
