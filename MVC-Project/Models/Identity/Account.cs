@@ -10,6 +10,7 @@ namespace MVC_Project.Models.Identity
     {
         Customer,
         Vendor,
+        Shipper,
         Administrator
     }
     public class Account
@@ -46,8 +47,8 @@ namespace MVC_Project.Models.Identity
         [HiddenInput]
         public string? HashSalt { get; set; }
 
-        //[DataType(DataType.Upload)]
-        //public byte[] ProfileImage { get; set; }
+        public virtual ICollection<Phone> PhoneNumbers { get; set; } = new List<Phone>();
+        public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
         public bool IsActive { get; set; } = true;
 

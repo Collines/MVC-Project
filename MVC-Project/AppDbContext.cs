@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MVC_Project.Models.Cart;
 using MVC_Project.Models.Identity;
 using shopping.Models;
 
@@ -30,6 +31,9 @@ namespace MVC_Project
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Wishlist> Wishlists { get; set; }
         public DbSet<Image> Images { get; set; }
-        
+        public DbSet<Address> Addresses { get; set; }
+        public DbSet<Phone> Phones { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
     }
 }
