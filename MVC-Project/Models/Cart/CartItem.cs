@@ -20,12 +20,15 @@ namespace MVC_Project.Models.Cart
         public required int Quantity { get; set; }
 
         [DataType(DataType.Currency)]
+        [Column(TypeName = "money")]
         public required decimal Price { get; set; }
 
         [DataType(DataType.Currency)]
+        [Column(TypeName = "money")]
         public decimal DiscountedPrice { get; set; }
 
         [DataType(DataType.Currency)]
+        [Column(TypeName = "money")]
         public decimal PriceAfterDiscount { get; set; }
 
         [ForeignKey("Product")]
@@ -39,6 +42,7 @@ namespace MVC_Project.Models.Cart
         public virtual Product? Product { get; set; }
 
         public virtual Cart? Cart { get; set; }
+
 
     }
 }
