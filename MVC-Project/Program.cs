@@ -32,6 +32,8 @@ namespace MVC_Project
             });
 
             builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
+            
+            builder.Services.AddTransient<InterfaceWishlistRepository, WishlistRepository>();
 
             builder.Services.AddHttpContextAccessor();
 
@@ -80,6 +82,10 @@ namespace MVC_Project
 
 
             app.Run();
+
+
+
+            //ezz
         }
     }
 }

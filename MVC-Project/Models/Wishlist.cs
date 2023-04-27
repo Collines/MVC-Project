@@ -12,10 +12,12 @@ namespace shopping.Models
         [Required]
         public required int AccountID { get; set; }
 
-        [ForeignKey("Product")]
-        [Required]
-        public required int ProductID { get; set; }
+        public ICollection<Product> Products { get; set; } = new List<Product>();
+
+        //[ForeignKey("Product")]
+        //[Required]
+        //public required int ProductID { get; set; }
         public virtual Account? Account { get; set; }
-        public virtual Product? Product { get; set; }
+        //public virtual Product? Product { get; set; }
     }
 }
