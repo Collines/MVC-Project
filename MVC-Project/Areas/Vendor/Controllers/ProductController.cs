@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MVC_Project;
 using MVC_Project.Helpers;
 using shopping.Models;
 
@@ -55,7 +50,7 @@ namespace MVC_Project.Areas.Vendor.Controllers
         public IActionResult Create()
         {
             ViewData["BrandID"] = new SelectList(_context.Set<Brand>(), "Id", "Name");
-            ViewData["Categories"] = _context.Categories.Include(c=>c.SubCategories).ToList();
+            ViewData["Categories"] = _context.Categories.Include(c => c.SubCategories).ToList();
             return View();
         }
 
@@ -64,7 +59,7 @@ namespace MVC_Project.Areas.Vendor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,description,price,Quantity,BrandID,IsAvailable,SubCategoryId,Images")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,Description,Price,Quantity,BrandID,IsAvailable,SubCategoryId,Images")] Product product)
         {
             foreach (var file in Request.Form.Files)
             {
@@ -107,7 +102,7 @@ namespace MVC_Project.Areas.Vendor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,description,price,Quantity,BrandID,IsAvailable,SubCategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,Description,Price,Quantity,BrandID,IsAvailable,SubCategoryId")] Product product)
         {
             if (id != product.ProductId)
             {
@@ -173,14 +168,14 @@ namespace MVC_Project.Areas.Vendor.Controllers
             {
                 _context.Products.Remove(product);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProductExists(int id)
         {
-          return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
+            return (_context.Products?.Any(e => e.ProductId == id)).GetValueOrDefault();
         }
     }
 }

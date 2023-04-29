@@ -7,6 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace shopping.Models
 {
@@ -31,15 +33,15 @@ namespace shopping.Models
         public required string ProductName { get; set; }
 
         [Required]
-        public required string description { get; set; }
+        public required string Description { get; set; }
 
         [Required]
-        [Range(0, float.MaxValue)]
+        [Range(0, double.MaxValue)]
         [DataType(DataType.Currency)]
         [Column(TypeName = "money")]
-        public required decimal price { get; set; }
+        public required decimal Price { get; set; }
 
-        [Range(1,int.MaxValue)]
+        [Range(1, int.MaxValue)]
         [Required]
         [RegularExpression("([1-9][0-9]*)")]
         public required int Quantity { get; set; }
@@ -69,13 +71,21 @@ namespace shopping.Models
 /*        [Required]
         [ForeignKey("Category")]
 
-        public int CategoryId { get; set; }*/
         [Required]
         [ForeignKey("SubCategory")]
 
         public required int SubCategoryId { get; set; }
+
         public virtual Brand? Brand { get; set; }
+
         public virtual Subcategory? SubCategory { get; set; }
-        //public virtual Category? Category { get; set; }
+
+        public ICollection<Image> Images { get; set; } = new HashSet<Image>();
+
+        public Image? GetMainImage()
+        {
+            if (Images.Count == 0) return null;
+            return Images.FirstOrDefault();
+        }
     }
 }

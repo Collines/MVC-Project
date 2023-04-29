@@ -1,0 +1,48 @@
+﻿@using Microsoft.EntityFrameworkCore;
+@using shopping.Models;
+@{
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ecommerce</title>
+    <link rel="stylesheet" href="~/css/min/all.css" />
+</head>
+<body>
+    <header class="li-header-4">
+        <!-- Begin Header Middle Area -->
+        <div class="header-middle pl-sm-0 pr-sm-0 pl-xs-0 pr-xs-0">
+            <div class="container">
+                <div class="row">
+                    <!-- Begin Header Logo Area -->
+                    <div class="col-lg-3">
+                        <div class="logo pb-sm-30 pb-xs-30">
+                            <a href="/">
+                                <img src="/images/menu/logo/2.jpg" alt="">
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Header Logo Area End Here -->
+                </div>
+            </div>
+        </div>
+        <!-- Header Middle Area End Here -->
+    </header>
+    @RenderSection("fluid", required:false)
+    <div class="body-wrapper">
+        <div class="container">
+            <main role="main" class="pb-3 pt-3">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    @*    <script src="/~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/~/js/site.js" asp-append-version="true"></script>*@
+    <script src="~/js/min/all.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
