@@ -40,7 +40,7 @@ namespace MVC_Project
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
-                AppDBContextSeeder.SeedData(db);
+                AppDBContextSeeder.SeedData(db, isDynamicSeeding: true);
             }
             ////////
 
