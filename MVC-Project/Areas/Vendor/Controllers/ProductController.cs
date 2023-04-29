@@ -64,7 +64,7 @@ namespace MVC_Project.Areas.Vendor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,ProductName,description,price,Quantity,BrandID,IsAvailable,SubCategoryId,Images")] Product product)
+        public async Task<IActionResult> Create([Bind("ProductId,ProductName,description,price,Quantity,BrandID,IsAvailable,SubCategoryId,Images,Discount,IsHotDeal,Rate")] Product product)
         {
             foreach (var file in Request.Form.Files)
             {
@@ -108,17 +108,27 @@ namespace MVC_Project.Areas.Vendor.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,description,price,Quantity,BrandID,IsAvailable,SubCategoryId")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("ProductId,ProductName,description,price,Quantity,BrandID,IsAvailable,SubCategoryId,Images,Discount,IsHotDeal,Rate")] Product product)
         {
             if (id != product.ProductId)
             {
                 return NotFound();
             }
-
+            
             if (ModelState.IsValid)
             {
                 try
                 {
+             
+                    foreach (var file in Request.Form.Files)
+                    {
+                        Image img = ImageHandler.EncodeImage(file);
+                        
+                        _context.Images.Add(img);
+                        _context.SaveChanges();
+                        product.Images.Add(img);
+                    }
+
                     _context.Update(product);
                     await _context.SaveChangesAsync();
                 }

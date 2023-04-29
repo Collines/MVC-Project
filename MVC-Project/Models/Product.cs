@@ -21,15 +21,16 @@ namespace shopping.Models
         [Required]
         [Range(0, float.MaxValue)]
         [DataType(DataType.Currency)]
+        [Column(TypeName="money")]
         public required float price { get; set; }
 
         [Range(1,int.MaxValue)]
         [Required]
         [RegularExpression("([1-9][0-9]*)")]
         public required int Quantity { get; set; }
-        //public float ? Discount { get; set; }
-        //public float Rate { get; set; }
-        //List<string> Images { get; set; }   
+        public float ? Discount { get; set; }
+        public float Rate { get; set; }
+       
         [Required]
         public ICollection<Image> Images { get; set; } = new HashSet<Image>();
 
@@ -37,14 +38,10 @@ namespace shopping.Models
         [ForeignKey("Brand")]
         public required int BrandID { get; set; }
         //public string color { get; set; }
-        //public bool IsHotDeal { get; set; }
-        //public bool IsFeatured { get; set; }
-        //public bool IsTrend { get; set; }
+        public bool IsHotDeal { get; set; }
+        public bool IsTrend { get; set; }
         public bool IsAvailable { get; set; }
-/*        [Required]
-        [ForeignKey("Category")]
 
-        public int CategoryId { get; set; }*/
         [Required]
         [ForeignKey("SubCategory")]
 

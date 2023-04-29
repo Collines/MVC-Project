@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Areas/Vendor/Views/Shared/_VendorLayout.cshtml";
+    List<int> RateNum = new List<int> { 1, 2, 3, 4, 5 };
+
 }
 
 <h1>Edit</h1>
@@ -11,7 +13,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ProductId" />
             <div class="form-group">
@@ -35,6 +37,11 @@
                 <span asp-validation-for="Quantity" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Discount" class="control-label"></label>
+                <input asp-for="Discount" class="form-control" />
+                <span asp-validation-for="Discount" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="BrandID" class="control-label"></label>
                 <select asp-for="BrandID" class="form-control" asp-items="ViewBag.BrandID"></select>
                 <span asp-validation-for="BrandID" class="text-danger"></span>
@@ -44,10 +51,35 @@
                     <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
                 </label>
             </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsHotDeal" /> @Html.DisplayNameFor(model => model.IsHotDeal)
+                </label>
+            </div>
             <div class="form-group">
                 <label asp-for="SubCategoryId" class="control-label"></label>
                 <select asp-for="SubCategoryId" class="form-control" asp-items="ViewBag.SubCategoryId"></select>
                 <span asp-validation-for="SubCategoryId" class="text-danger"></span>
+            </div>
+            <label asp-for="Rate" class="control-label"></label>
+            <select name="rate" class="form-control">
+                @foreach (var item in RateNum)
+                {
+                    <option>@item</option>
+                }
+            </select>
+            <span asp-validation-for="Rate" class="text-danger"></span>
+            <div class="form-group">
+                <label for="Images">Product Images</label>
+                <div class="input-group">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" name="Images" id="Images" multiple>
+                        <label class="custom-file-label" for="Images">Choose file</label>
+                    </div>
+                    <div class="input-group-append">
+                        <span class="input-group-text">Upload</span>
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

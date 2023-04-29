@@ -4,6 +4,7 @@ using MVC_Project;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVC_Project.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230427073358_EditProductEntity")]
+    partial class EditProductEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,73 +24,6 @@ namespace MVC_Project.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("MVC_Project.Models.Cart.Cart", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.HasIndex("AddressId");
-
-                    b.ToTable("Carts", (string)null);
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Cart.CartItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("Discount")
-                        .HasColumnType("real");
-
-                    b.Property<decimal>("DiscountedPrice")
-                        .HasColumnType("money");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money");
-
-                    b.Property<decimal>("PriceAfterDiscount")
-                        .HasColumnType("money");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("CartItems", (string)null);
-                });
 
             modelBuilder.Entity("MVC_Project.Models.Identity.Account", b =>
                 {
@@ -130,70 +66,7 @@ namespace MVC_Project.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Accounts", (string)null);
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Identity.Address", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Addr")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("AppartmentSuite")
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
-
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("TownCity")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Zipcode")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("Addresses", (string)null);
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Identity.Phone", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AccountId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AccountId");
-
-                    b.ToTable("Phones", (string)null);
+                    b.ToTable("Accounts");
                 });
 
             modelBuilder.Entity("shopping.Models.Brand", b =>
@@ -210,7 +83,7 @@ namespace MVC_Project.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Brands", (string)null);
+                    b.ToTable("Brands");
                 });
 
             modelBuilder.Entity("shopping.Models.Category", b =>
@@ -227,7 +100,7 @@ namespace MVC_Project.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories", (string)null);
+                    b.ToTable("Categories");
                 });
 
             modelBuilder.Entity("shopping.Models.Image", b =>
@@ -253,7 +126,7 @@ namespace MVC_Project.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("shopping.Models.Product", b =>
@@ -267,7 +140,16 @@ namespace MVC_Project.Migrations
                     b.Property<int>("BrandID")
                         .HasColumnType("int");
 
+                    b.Property<float?>("Discount")
+                        .HasColumnType("real");
+
                     b.Property<bool>("IsAvailable")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsHotDeal")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTrend")
                         .HasColumnType("bit");
 
                     b.Property<string>("ProductName")
@@ -278,6 +160,9 @@ namespace MVC_Project.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<float>("Rate")
+                        .HasColumnType("real");
+
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
 
@@ -285,8 +170,8 @@ namespace MVC_Project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("price")
-                        .HasColumnType("money");
+                    b.Property<float>("price")
+                        .HasColumnType("real");
 
                     b.HasKey("ProductId");
 
@@ -294,7 +179,7 @@ namespace MVC_Project.Migrations
 
                     b.HasIndex("SubCategoryId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("shopping.Models.Subcategory", b =>
@@ -316,7 +201,7 @@ namespace MVC_Project.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Subcategories", (string)null);
+                    b.ToTable("Subcategories");
                 });
 
             modelBuilder.Entity("shopping.Models.Wishlist", b =>
@@ -339,65 +224,7 @@ namespace MVC_Project.Migrations
 
                     b.HasIndex("ProductID");
 
-                    b.ToTable("Wishlists", (string)null);
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Cart.Cart", b =>
-                {
-                    b.HasOne("MVC_Project.Models.Identity.Account", "Account")
-                        .WithMany()
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MVC_Project.Models.Identity.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
-
-                    b.Navigation("Account");
-
-                    b.Navigation("Address");
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Cart.CartItem", b =>
-                {
-                    b.HasOne("MVC_Project.Models.Cart.Cart", "Cart")
-                        .WithMany("CartItems")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("shopping.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Identity.Address", b =>
-                {
-                    b.HasOne("MVC_Project.Models.Identity.Account", "Account")
-                        .WithMany("Addresses")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Identity.Phone", b =>
-                {
-                    b.HasOne("MVC_Project.Models.Identity.Account", "Account")
-                        .WithMany("PhoneNumbers")
-                        .HasForeignKey("AccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Account");
+                    b.ToTable("Wishlists");
                 });
 
             modelBuilder.Entity("shopping.Models.Image", b =>
@@ -456,18 +283,6 @@ namespace MVC_Project.Migrations
                     b.Navigation("Account");
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Cart.Cart", b =>
-                {
-                    b.Navigation("CartItems");
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Identity.Account", b =>
-                {
-                    b.Navigation("Addresses");
-
-                    b.Navigation("PhoneNumbers");
                 });
 
             modelBuilder.Entity("shopping.Models.Brand", b =>

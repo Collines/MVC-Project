@@ -16,8 +16,13 @@ namespace MVC_Project.Controllers
 
         public IActionResult Details(int id)
         {
-            Product P = Context.Products.Include(P => P.Images).Include(P => P.SubCategory).FirstOrDefault(Pr=>Pr.ProductId==id);
-            if(P!=null)
+            Product P = Context.Products.Include(P => P.Images).Include(P => P.SubCategory).Include(b=>b.Brand).FirstOrDefault(Pr=>Pr.ProductId==id);
+
+            Image img2 = Context.Images.FirstOrDefault(I => I.ProductId == P.ProductId);
+            string imageDataURL = ImageHandler.GetImageURI(img2);
+
+            ViewBag.ProductImage = imageDataURL;
+            if (P!=null)
             {
                 List<string> Images = new();
                 foreach(Image img in P.Images)
@@ -27,6 +32,7 @@ namespace MVC_Project.Controllers
                 }
                 ViewBag.Images = Images;
             }
+          
             return View(P);
         }
     }
