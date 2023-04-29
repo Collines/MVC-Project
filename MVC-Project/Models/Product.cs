@@ -1,14 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.ObjectModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Xml.Linq;
 
 namespace shopping.Models
 {
     public class Product
     {
-       [Key]
+        [Key]
         public int ProductId { get; set; }
 
         [Required]
@@ -16,41 +13,39 @@ namespace shopping.Models
         public required string ProductName { get; set; }
 
         [Required]
-        public required string description { get; set; }
+        public required string Description { get; set; }
 
         [Required]
-        [Range(0, float.MaxValue)]
+        [Range(0, double.MaxValue)]
         [DataType(DataType.Currency)]
-        public required float price { get; set; }
+        public required double Price { get; set; }
 
-        [Range(1,int.MaxValue)]
+        [Range(1, int.MaxValue)]
         [Required]
         [RegularExpression("([1-9][0-9]*)")]
         public required int Quantity { get; set; }
-        //public float ? Discount { get; set; }
-        //public float Rate { get; set; }
-        //List<string> Images { get; set; }   
-        [Required]
-        public ICollection<Image> Images { get; set; } = new HashSet<Image>();
+
+        public bool IsAvailable { get; set; }
 
         [Required]
         [ForeignKey("Brand")]
         public required int BrandID { get; set; }
-        //public string color { get; set; }
-        //public bool IsHotDeal { get; set; }
-        //public bool IsFeatured { get; set; }
-        //public bool IsTrend { get; set; }
-        public bool IsAvailable { get; set; }
-/*        [Required]
-        [ForeignKey("Category")]
 
-        public int CategoryId { get; set; }*/
         [Required]
         [ForeignKey("SubCategory")]
 
         public required int SubCategoryId { get; set; }
+
         public virtual Brand? Brand { get; set; }
+
         public virtual Subcategory? SubCategory { get; set; }
-        //public virtual Category? Category { get; set; }
+
+        public ICollection<Image> Images { get; set; } = new HashSet<Image>();
+
+        public Image? GetMainImage()
+        {
+            if (Images.Count == 0) return null;
+            return Images.FirstOrDefault();
+        }
     }
 }

@@ -73,6 +73,7 @@
   <ItemGroup>
     <Folder Include="Areas\Vendor\Data\" />
     <Folder Include="Areas\Vendor\Models\" />
+    <Folder Include="wwwroot\products_images\" />
   </ItemGroup>
 
 </Project>

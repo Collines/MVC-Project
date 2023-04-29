@@ -16,11 +16,11 @@ namespace MVC_Project.Controllers
 
         public IActionResult Details(int id)
         {
-            Product P = Context.Products.Include(P => P.Images).Include(P => P.SubCategory).FirstOrDefault(Pr=>Pr.ProductId==id);
-            if(P!=null)
+            var P = Context.Products.Include(P => P.Images).Include(P => P.SubCategory).FirstOrDefault(Pr => Pr.ProductId == id);
+            if (P != null)
             {
                 List<string> Images = new();
-                foreach(Image img in P.Images)
+                foreach (Image img in P.Images)
                 {
                     if (img != null)
                         Images.Add(ImageHandler.GetImageURI(img));

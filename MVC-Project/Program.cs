@@ -1,10 +1,9 @@
-using MVC_Project.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 using MVC_Project.Interfaces;
 using MVC_Project.Models.Identity;
 using MVC_Project.Repositories;
-using Microsoft.Data.SqlClient;
+using MVC_Project.Seeder;
 
 namespace MVC_Project
 {
@@ -36,6 +35,14 @@ namespace MVC_Project
             builder.Services.AddHttpContextAccessor();
 
             var app = builder.Build();
+
+            // Seeding Data
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+                AppDBContextSeeder.SeedData(db);
+            }
+            ////////
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -72,7 +79,7 @@ namespace MVC_Project
             app.MapControllerRoute(
                 name: "Account",
                 pattern: "Account/{action=Dashboard}",
-                defaults: new { controller = "Account", action = "Dashboard"});
+                defaults: new { controller = "Account", action = "Dashboard" });
 
             app.MapControllerRoute(
                 name: "default",

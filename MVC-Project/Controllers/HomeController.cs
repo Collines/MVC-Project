@@ -1,26 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MVC_Project.Models;
+using shopping.Models;
 using System.Diagnostics;
 
 namespace MVC_Project.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
         private readonly AppDBContext _context;
-        public HomeController(ILogger<HomeController> logger, AppDBContext context)
+
+        public HomeController(AppDBContext context)
         {
-            _logger = logger;
             _context = context;
         }
 
         public IActionResult Index()
         {
-            //var all_cate = _context.Categories.Include(x => x.SubCategories).ToList();
-            //return View(all_cate);
-            return View();
+            List<Subcategory> subcategories = _context.Subcategories.Include(S => S.Products).ThenInclude(P => P.Brand).Include(S => S.Products).ThenInclude(P => P.Images).ToList();
+
+            return View(subcategories);
         }
 
         public IActionResult Forbidden()
