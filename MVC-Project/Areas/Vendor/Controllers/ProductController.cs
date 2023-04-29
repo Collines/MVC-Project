@@ -70,7 +70,6 @@ namespace MVC_Project.Areas.Vendor.Controllers
             {
                 Image img = ImageHandler.EncodeImage(file);
                 _context.Images.Add(img);
-                _context.SaveChanges();
                 product.Images.Add(img);
             }
 

@@ -2,6 +2,7 @@
 using MVC_Project.Models.Cart;
 using MVC_Project.Models.Identity;
 using shopping.Models;
+using System.Reflection.Metadata;
 
 namespace MVC_Project
 {
@@ -21,7 +22,15 @@ namespace MVC_Project
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Account>().HasIndex(A => A.Email).IsUnique();
+            modelBuilder
+                .Entity<Account>().HasIndex(A => A.Email).IsUnique();
+            modelBuilder
+                .Entity<Product>().HasMany(P=>P.Images).WithOne(A => A.Product)
+                .OnDelete(DeleteBehavior.ClientCascade);
+            modelBuilder
+                .Entity<Product>().Property(P => P.SKU)
+                .HasComputedColumnSql("CONCAT(ProductId,'-',Subcategoryid,'-',Brandid)", stored:true);
+            modelBuilder.Entity<Cart>().HasQueryFilter(C => C.IsActive == true);
         }
 
         public DbSet<Category> Categories { get; set; }

@@ -1,10 +1,10 @@
 ﻿@using MVC_Project.Helpers;
+@using MVC_Project.Models.Identity;
 @{
     ViewData["Title"] = "Home Page";
     AppDBContext DB = new();
     List<Subcategory> Subcategories = DB.Subcategories.Include(S => S.Products).ToList();
 }
-
 @foreach(Subcategory sub in Subcategories) {
     int counter = 1; 
     if(sub.Products.Count>0)
@@ -59,7 +59,7 @@
                                                 </div>
                                                 <div class="add-actions">
                                                     <ul class="add-actions-link">
-                                                        <li class="add-cart active"><a href="#">Add to cart</a></li>
+                                                        <li class="add-cart active add-to-cart" data-id="@product.ProductId"><a href="#">Add to cart</a></li>
                                                         <li><a class="links-details" href="single-product.html"><i class="fa fa-heart-o"></i></a></li>
                                                         <li><a class="quick-view" data-toggle="modal" data-target="#exampleModalCenter" href="#"><i class="fa fa-eye"></i></a></li>
                                                     </ul>
@@ -79,4 +79,51 @@
         </section>
     }
     counter++;
+}
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            // Document.ready -> link up remove event handler
+            $(".add-to-cart").click(function () {
+                // Get the id from the link
+                var recoredToAdd = $(this).attr("data-id");
+                if (recoredToAdd != '') {
+                    // Perform the ajax post
+                    $.post("/ShoppingCart/AddToCart/"+recoredToAdd,
+                        function (data) {
+                            debugger;
+                            $('#cartItemCount').text(data.cartCount);
+                            $("#MiniCartTotalPrice").text(data.cartTotalPrice)
+                            $('#MiniCartTotalPrice2').text(data.cartTotalPrice);
+
+                            document.getElementsByClassName("minicart-product-list")[0].innerHTML += `
+                                            <li id="newAdded${data.productId}" data-id="${data.productId}">
+                                        <a href="/Product/Details/${data.productId}" class="minicart-product-image">
+                                            <img src="${data.imageURI}" alt="cart products">
+                                        </a>
+                                        <div class="minicart-product-details">
+                                                            <h6><a href="/Product/Details/${data.productId}">${data.productName}</a></h6>
+                                                                            <span>${data.priceAfterDiscount} x ${data.quantity}</span>
+                                        </div>
+                                        <button class="close removeCartItem" data-id="${data.productId}">
+                                            <i class="fa fa-close"></i>
+                                        </button>
+                                    </li>
+                            `
+                            //$('#cart-status').text('Cart (' + data.CartCount + ')');
+                        });
+                }
+            });
+        });
+    </script>
+@*    <script>
+        var x = setInterval(function(){
+            document.getElementById("cartItemCount").innerHTML = @CartCount;
+        },1000)
+    </script>*@
+@*    <script>
+        window.onload = function() {
+            document.getElementById("cartItemCount").innerHTML = @CartCount;
+        }
+    </script>*@
 }

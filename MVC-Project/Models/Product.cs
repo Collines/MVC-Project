@@ -1,14 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using MVC_Project.Models.Cart;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Xml.Linq;
 
 namespace shopping.Models
 {
     public class Product
     {
-       [Key]
+        private ICollection<Image> images;
+        public Product()
+        {
+            
+        }
+        private Product(ILazyLoader lazyLoader)
+        {
+            LazyLoader = lazyLoader;
+        }
+        private ILazyLoader LazyLoader { get; set; }
+
+        [Key]
         public int ProductId { get; set; }
 
         [Required]
@@ -22,7 +37,7 @@ namespace shopping.Models
         [Range(0, float.MaxValue)]
         [DataType(DataType.Currency)]
         [Column(TypeName = "money")]
-        public required float price { get; set; }
+        public required decimal price { get; set; }
 
         [Range(1,int.MaxValue)]
         [Required]
@@ -32,11 +47,20 @@ namespace shopping.Models
         //public float Rate { get; set; }
         //List<string> Images { get; set; }   
         [Required]
-        public ICollection<Image> Images { get; set; } = new HashSet<Image>();
+        //public virtual ICollection<Image> Images { get; set; } = new HashSet<Image>();
+        public ICollection<Image> Images
+        {
+            get => LazyLoader.Load(this, ref images);
+            set => images = value;
+        }
 
         [Required]
         [ForeignKey("Brand")]
         public required int BrandID { get; set; }
+
+        [HiddenInput]
+        [Editable(false)]
+        public string? SKU { get; set; }
         //public string color { get; set; }
         //public bool IsHotDeal { get; set; }
         //public bool IsFeatured { get; set; }
