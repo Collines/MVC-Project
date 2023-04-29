@@ -1,5 +1,28 @@
-﻿
+﻿@using MVC_Project.Helpers
+@using MVC_Project.Models.Wishlist;
+@model MVC_Project.Models.Wishlist.Wishlist;
+
 @{
     ViewData["Title"] = "Wishlist";
 }
-<h1>Wishlist</h1>
+<h1>Your Wishlist</h1>
+<div class="your-order-table table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (Wishlistitem ci in Model.Wishlistitems)
+            {
+                <tr class="wish_item">
+                    <td class="wish-product-name"> @ci.Product.ProductName</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>

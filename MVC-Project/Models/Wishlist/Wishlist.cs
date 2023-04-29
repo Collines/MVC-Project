@@ -1,23 +1,27 @@
 ﻿using Microsoft.Build.Framework;
 using MVC_Project.Models.Identity;
+using shopping.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace shopping.Models
+namespace MVC_Project.Models.Wishlist
 {
     public class Wishlist
     {
+        private ICollection<Wishlistitem> _Wishlistitems;
+        public Wishlist()
+        {
+
+        }
+
+
         public int Id { get; set; }
 
         [ForeignKey("Account")]
         [Required]
         public required int AccountID { get; set; }
 
-        public ICollection<Product> Products { get; set; } = new List<Product>();
-
-        //[ForeignKey("Product")]
-        //[Required]
-        //public required int ProductID { get; set; }
         public virtual Account? Account { get; set; }
-        //public virtual Product? Product { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        public bool IsActive { get; set; } = true;
     }
 }

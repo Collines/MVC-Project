@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MVC_Project.Models.Identity;
-using shopping.Models;
+using MVC_Project.Models.Wishlist;
 
 
 namespace MVC_Project.Repositories

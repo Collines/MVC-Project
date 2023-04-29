@@ -1,4 +1,4 @@
-﻿using shopping.Models;
+﻿using MVC_Project.Models.Wishlist;
 
 namespace MVC_Project.Repositories
 {

@@ -21,7 +21,7 @@ namespace shopping.Models
         [Required]
         [Range(0, float.MaxValue)]
         [DataType(DataType.Currency)]
-        public required float price { get; set; }
+        public required decimal price { get; set; }
 
         [Range(1,int.MaxValue)]
         [Required]
