@@ -1,7 +1,8 @@
 ﻿@using MVC_Project.Models.Identity;
+@model Account;
 @{
 	<main class="main">
-		<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+		<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg');margin-bottom:40px;">
 			<div class="container">
 				<h1 class="page-title mb-5">My Account <span>Shop</span></h1>
 			</div><!-- End .container -->
@@ -27,22 +28,16 @@
 							<aside class="col-md-4 col-lg-3">
 								<ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
 									<li class="nav-item">
-										<a class="nav-link active" id="tab-dashboard-link" data-toggle="tab" href="#tab-dashboard" role="tab" aria-controls="tab-dashboard" aria-selected="true">Dashboard</a>
+										<a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
 									</li>
 									<li class="nav-item">
 										<a class="nav-link" id="tab-orders-link" data-toggle="tab" href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="false">Orders</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="tab-downloads-link" data-toggle="tab" href="#tab-downloads" role="tab" aria-controls="tab-downloads" aria-selected="false">Downloads</a>
-									</li>
-									<li class="nav-item">
 										<a class="nav-link" id="tab-address-link" data-toggle="tab" href="#tab-address" role="tab" aria-controls="tab-address" aria-selected="false">Adresses</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" id="tab-account-link" data-toggle="tab" href="#tab-account" role="tab" aria-controls="tab-account" aria-selected="false">Account Details</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link" href="#">Sign Out</a>
+										<a class="nav-link" href="/Account/Logout">Sign Out</a>
 									</li>
 								</ul>
 							</aside><!-- End .col-lg-3 -->
@@ -62,46 +57,92 @@
 										<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
 									</div><!-- .End .tab-pane -->
 
-									<div class="tab-pane fade" id="tab-downloads" role="tabpanel" aria-labelledby="tab-downloads-link">
-										<p>No downloads available yet.</p>
-										<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
-									</div><!-- .End .tab-pane -->
 
 									<div class="tab-pane fade" id="tab-address" role="tabpanel" aria-labelledby="tab-address-link">
-										<p>The following addresses will be used on the checkout page by default.</p>
+										<p class="text-center">
+											<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#AddAddress" aria-expanded="false">
+												Add Address
+											</button>
+											<div class="alert alert-success text-center" role="alert" id="ResponseMsg" style="display:none">
+											</div>
+										</p>
+										<div class="collapse mb-3" id="AddAddress">
+											<div class="card card-body">
+													<div class="form-row">
+														<div class="form-group col-md-8">
+															<label for="Address">Address</label>
+															<input type="text" class="form-control" id="Address" name="Addr" placeholder="1234 Main St">
+														</div>
+														<div class="form-group col-md-4">
+															<label for="AppartmentSuite">AppartmentSuite</label>
+															<input type="text" class="form-control" id="AppartmentSuite" name="AppartmentSuite">
+														</div>
+													</div>
+													<div class="form-row">
+														<div class="form-group col-md-6">
+															<label for="TownCity">Town/City</label>
+															<input type="text" class="form-control" id="TownCity" placeholder="Masr Al Qadima" name="TownCity">
+														</div>
+														<div class="form-group col-md-4">
+															<label for="inputState">State</label>
+															<input type="text" class="form-control" id="inputState" placeholder="CA" name="State">
+														</div>
+														<div class="form-group col-md-2">
+															<label for="inputZip">Zip</label>
+															<input type="text" class="form-control" id="inputZip" name="Zipcode">
+														</div>
+													</div>
+													<button type="submit" class="btn btn-primary" id="AddAddressBtn">Add Address</button>
+											</div>
+										</div>
 
-										<div class="row">
-											<div class="col-lg-6">
-												<div class="card card-dashboard">
-													<div class="card-body">
-														<h3 class="card-title">Billing Address</h3><!-- End .card-title -->
 
-														<p>
-															User Name<br>
-															User Company<br>
-															John str<br>
-															New York, NY 10001<br>
-															1-234-987-6543<br>
-															yourmail@mail.com<br>
-															<a href="#">Edit <i class="icon-edit"></i></a>
-														</p>
-													</div><!-- End .card-body -->
-												</div><!-- End .card-dashboard -->
-											</div><!-- End .col-lg-6 -->
+											<div class="accordion" id="accordionExample">
+											@if(Model!=null)
+											{
+												if(Model.Addresses.Count > 0)
+												{
+													foreach (Address A in Model.Addresses)
+													{
+														<div class="card position-relative">
+															<div class="card-header" id="@A.Id">
+																<h2 class="mb-0">
+																	<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse-@A.Id" aria-expanded="true" aria-controls="collapseOne">
+																		@A.Addr @{
+																			if (A.IsDefault())
+																			{
+																				<span class="text-success" style="position: absolute; right: 10px;">Default</span>
+																			}
+																		}
+																	</button>
+																</h2>
+															</div>
 
-											<div class="col-lg-6">
-												<div class="card card-dashboard">
-													<div class="card-body">
-														<h3 class="card-title">Shipping Address</h3><!-- End .card-title -->
+															<div id="collapse-@A.Id" class="collapse" aria-labelledby="@A.Id" data-parent="#accordionExample">
+																<div class="card-body">
+																	<p><strong>Address: </strong>@A.Addr</p>
+																	<p><strong>Appartment/Suite: </strong>@A.AppartmentSuite</p>
+																	<p><strong>Town/City: </strong>@A.TownCity</p>
+																	<p><strong>State: </strong>@A.State</p>
+																	<p><strong>Zipcode: </strong>@A.Zipcode</p>
+																	@if (!A.IsDefault())
+																	{
+																		<p class="text-center"><button type="button" class="btn btn-primary makeDefaultBtn" data-id="@A.Id">Make Default</button></p>
+																	}
 
-														<p>
-															You have not set up this type of address yet.<br>
-															<a href="#">Edit <i class="icon-edit"></i></a>
-														</p>
-													</div><!-- End .card-body -->
-												</div><!-- End .card-dashboard -->
-											</div><!-- End .col-lg-6 -->
-										</div><!-- End .row -->
+																</div>
+																
+															</div>
+														</div>
+													}
+												} else
+												{
+													<p class="text-center">No addresses</p>
+												}
+
+											}
+
+											</div>
 									</div><!-- .End .tab-pane -->
 
 									<div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
@@ -152,4 +193,65 @@
 	</main>
 
 	<!-- End .main -->
+}
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function () {
+			//function will be called on button click having id btnsave
+			debugger;
+			$("#AddAddressBtn").click(function () {
+				$.ajax(
+					{
+						type: "POST", //HTTP POST Method
+						url: "/Account/AddAddress", // Controller/View
+						data: { //Passing data
+							Address: $("#Address").val(),
+							AppartmentSuite: $("#AppartmentSuite").val(),
+							TownCity: $("#TownCity").val(),
+							State: $("#inputState").val(),
+							Zipcode: $("#inputZip").val()
+						},
+						success:function(result) {
+							$("#ResponseMsg").toggle().text(result.message)
+							document.getElementById("accordionExample").innerHTML += `
+							<div class="card">
+														<div class="card-header" id="${result.addedadd.id}">
+									<h2 class="mb-0">
+														<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse-${result.addedadd.Id}" aria-expanded="true" aria-controls="collapseOne">
+															${result.addedadd.addr}
+										</button>
+									</h2>
+								</div>
+
+																<div id="collapse-${result.addedadd.id}" class="collapse" aria-labelledby="${result.addedadd.id}" data-parent="#accordionExample">
+									<div class="card-body">
+														<p><strong>Address: </strong>${result.addedadd.addr}</p>
+																<p><strong>Appartment/Suite: </strong>${result.addedadd.appartmentSuite}</p>
+												<p><strong>Town/City: </strong>${result.addedadd.townCity}</p>
+												<p><strong>State: </strong>${result.addedadd.state}</p>
+										<p><strong>Zipcode: </strong>${result.addedadd.zipcode}</p>
+									</div>
+								</div>
+							</div>`
+						}
+
+					});
+			});
+
+			$(".makeDefaultBtn").click(function () {
+				var defaultaddress = $(this).attr("data-id");
+				$.ajax(
+					{
+						type: "POST", //HTTP POST Method
+						url: "/Account/SetDefaultAddress/"+defaultaddress, // Controller/View
+						data: { //Passing data
+							id: defaultaddress
+						},
+						success: function (result) {
+							$("#ResponseMsg").toggle().text(result.message)						}
+
+					});
+			});
+		});
+	</script>
 }
