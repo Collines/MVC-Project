@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using MVC_Project.Helpers;
 using MVC_Project.Interfaces;
 using MVC_Project.Models.Identity;
@@ -13,19 +13,21 @@ namespace MVC_Project.Controllers
     public class AccountController : Controller
     {
 
-        public AccountController(IRepository<Account> AccRepo)
+        public AccountController(IRepository<Account> AccRepo, AppDBContext db)
         {
             this.AccRepo = AccRepo;
+            DB = db;
         }
 
         public IRepository<Account> AccRepo { get; }
+        public AppDBContext DB { get; }
 
         [Authorize]
 		public IActionResult Dashboard()
 		{
             if (User.Identity.IsAuthenticated)
             {
-                return View();
+                return View(DB.Accounts.Include(A=>A.Addresses).FirstOrDefault(A=>A.Email == User.Claims.FirstOrDefault().Value));
             }
             return RedirectToAction("Login");
 		}
@@ -79,9 +81,7 @@ namespace MVC_Project.Controllers
 
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
-        {
-            using(AppDBContext DB = new AppDBContext())
-            {   
+        { 
                 Account? account = DB.Accounts.FirstOrDefault(A => A.Email == email);
                 if (account != null)
                 {
@@ -104,7 +104,7 @@ namespace MVC_Project.Controllers
                         return View();
                 }
                 return View();
-            }
+            
         }
 
         [HttpGet]
@@ -119,5 +119,51 @@ namespace MVC_Project.Controllers
             return RedirectToAction("Login");
         }
 
-    }
+        [Authorize]
+        public async Task<IActionResult> AddAddress(string address,string appartmentSuite,string townCity,string State, string Zipcode)
+        {
+            var x = Request;
+            var Acc = DB.Accounts.FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value);
+            Address add = new Address
+            {
+                Addr = address,
+                AppartmentSuite = appartmentSuite,
+                TownCity = townCity,
+                State = State,
+                Zipcode = Zipcode
+            };
+            Acc.Addresses.Add(add);
+			DB.SaveChanges();
+			return Json(new { Success = false, 
+                              Message = "Added successfully",
+                              addedadd= new {
+								  Addr = add.Addr,
+								  AppartmentSuite = add.AppartmentSuite,
+								  TownCity = add.TownCity,
+								  State = add.State,
+								  Zipcode = add.Zipcode
+							  } 
+            });
+		}
+		[Authorize]
+		public async Task<IActionResult> SetDefaultAddress(int id)
+        {
+			Account? account = DB.Accounts.Include(a=>a.Addresses).FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value);
+            if (account.HasAddress(id))
+            {
+				account.SelectedAddressId = id;
+                DB.SaveChanges();
+                return Json(new
+                {
+                    Success = true,
+                    Message = "Address Set to default",
+                });
+			}
+			return Json(new
+			{
+				Success = false,
+				Message = "Invalid",
+			});
+		}
+	}
 }

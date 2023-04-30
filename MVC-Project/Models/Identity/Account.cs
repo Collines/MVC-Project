@@ -1,8 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using MVC_Project.Helpers.Validators;
 
 namespace MVC_Project.Models.Identity
 {
@@ -47,6 +45,9 @@ namespace MVC_Project.Models.Identity
         [HiddenInput]
         public string? HashSalt { get; set; }
 
+        [ForeignKey("Address")]
+        public int SelectedAddressId { get; set; }
+
         public virtual ICollection<Phone> PhoneNumbers { get; set; } = new List<Phone>();
         public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
@@ -55,5 +56,15 @@ namespace MVC_Project.Models.Identity
         [Required]
         [EnumDataType(enumType:typeof(Role))]
         public Role UserRole { get; set; } = Role.Customer;
+
+        public bool HasAddress(int addressId)
+        {
+            foreach(Address address in Addresses)
+            {
+                if(address.Id== addressId)
+                    return true;
+            }
+            return false;
+        }
     }
 }

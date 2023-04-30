@@ -1,9 +1,9 @@
 ﻿@using shopping.Models
 @using MVC_Project
 @using Microsoft.EntityFrameworkCore;
+@inject AppDBContext DB;
 
 @{
-    AppDBContext DB = new AppDBContext();
     List<Category> categories = DB.Categories.Include(C => C.SubCategories).ToList();
 }
     <!DOCTYPE html>

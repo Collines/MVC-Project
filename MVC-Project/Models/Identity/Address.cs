@@ -31,5 +31,7 @@ namespace MVC_Project.Models.Identity
         [Required]
         public int AccountId { get; set; }
         public virtual Account? Account { get; set; }
-    }
+
+        public bool IsDefault() => Id == Account.SelectedAddressId;
+	}
 }

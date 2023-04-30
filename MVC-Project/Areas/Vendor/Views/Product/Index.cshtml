@@ -1,10 +1,11 @@
-﻿@model IEnumerable<Product>
+﻿@using MVC_Project.Helpers
+@model IEnumerable<Product>
+@inject AppDBContext DB;
 
 @{
     ViewData["Title"] = "Products";
     Layout = "~/Areas/Vendor/Views/Shared/_VendorLayout.cshtml";
     ViewData["Page"] = "Product";
-    AppDBContext DB = new();
 }
 
 <div class="card">
@@ -42,17 +43,9 @@
                 {
                     foreach (Product P in Model)
                     {
-                        Image img = DB.Images.FirstOrDefault(I => I.ProductId == P.ProductId);
-                        string imageDataURL = "";
-                        if(img!=null)
-                        {
-                            string imageBase64Data = Convert.ToBase64String(img.ImageData);
-                            string imgType = img.Title.Split(".")[img.Title.Split(".").Length - 1];
-                            imageDataURL = string.Format($"data:image/{imgType};base64,{imageBase64Data}")??"";
-                        }
                         <tr>
                             <td>@P.ProductId</td>
-                            <td><img style="max-width:100%;max-height:100%" src="@imageDataURL" title="@img?.Title"/></td>
+                            <td><img style="max-width:100%;max-height:100%" src="@ImageHandler.GetImageURI(P.GetMainImage())" title="@P.GetMainImage()?.Title" /></td>
                             <td>@P.ProductName</td>
                             <td>@P.SubCategory.SubCategoryName</td>
                             <td>@P.Brand.Name</td>

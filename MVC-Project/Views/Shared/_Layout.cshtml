@@ -1,13 +1,16 @@
 ﻿@using MVC_Project.Models.Cart;
 @using MVC_Project.Models.Identity;
-@using Microsoft.EntityFrameworkCore;
 @using MVC_Project.Helpers
-@using shopping.Models;
+@inject AppDBContext DB;
 @{
-    AppDBContext DB = new AppDBContext();
     IEnumerable<Category> Categories = DB.Categories.Include(C=>C.SubCategories).ToList();
-    Account AuthAcc = DB.Accounts.FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value);
-    Cart cart = DB.Carts.FirstOrDefault(C => C.AccountId == AuthAcc.Id);
+    Account AuthAcc;
+    Cart? cart = null;
+    if (User.Identity.IsAuthenticated)
+    {
+         AuthAcc = DB.Accounts.FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value);
+         cart = DB.Carts.Include(c=>c.CartItems).ThenInclude(ci=>ci.Product).ThenInclude(p=>p.Images).FirstOrDefault(C => C.AccountId == AuthAcc.Id);
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -128,20 +131,23 @@
                                         <span></span>
                                         <div class="minicart">
                                             <ul class="minicart-product-list">
-                                                @foreach(CartItem ci in cart.CartItems)
+                                                @if(cart != null)
                                                 {
-                                                    <li>
-                                                        <a href="/Product/Details/@ci.ProductId" class="minicart-product-image">
-                                                            <img src="@ImageHandler.GetImageURI(@ci.Product.Images.FirstOrDefault())" alt="cart products">
-                                                        </a>
-                                                        <div class="minicart-product-details">
-                                                            <h6><a href="/Product/Details/@ci.ProductId">@ci.Product.ProductName</a></h6>
-                                                            <span>@ci.PriceAfterDiscount x @ci.Quantity</span>
-                                                        </div>
-                                                        <button class="close removeCartItem" data-id="@ci.ProductId">
-                                                            <i class="fa fa-close"></i>
-                                                        </button>
-                                                    </li>
+                                                    @foreach (CartItem ci in cart.CartItems)
+                                                    {
+                                                        <li>
+                                                            <a href="/Product/Details/@ci.ProductId" class="minicart-product-image">
+                                                                <img src="@ImageHandler.GetImageURI(@ci.Product.GetMainImage())" alt="cart products">
+                                                            </a>
+                                                            <div class="minicart-product-details">
+                                                                <h6><a href="/Product/Details/@ci.ProductId">@ci.Product.ProductName</a></h6>
+                                                                <span>@ci.PriceAfterDiscount x @ci.Quantity</span>
+                                                            </div>
+                                                            <button class="close removeCartItem" data-id="@ci.ProductId">
+                                                                <i class="fa fa-close"></i>
+                                                            </button>
+                                                        </li>
+                                                    }
                                                 }
                                                 @*<li>
                                                     <a href="single-product.html" class="minicart-product-image">
@@ -469,18 +475,12 @@
     <script src="/~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/min/all.js"></script>
-    @{
-        decimal totalCartPrice = 0;
-        foreach (CartItem ci in cart.CartItems)
-        {
-            totalCartPrice += ci.PriceAfterDiscount;
-        }
-    }
+
     <script>
         window.onload = function () {
-            document.getElementById("cartItemCount").innerHTML = @cart.CartItems.Count;
-            document.getElementById("MiniCartTotalPrice").innerText = "$"+@totalCartPrice;
-            document.getElementById("MiniCartTotalPrice2").innerText = "$" + @totalCartPrice;
+            document.getElementById("cartItemCount").innerHTML = @cart?.CartItems.Count??0;
+            document.getElementById("MiniCartTotalPrice").innerText = "$"+@cart?.GetTotalPrice()??0;
+            document.getElementById("MiniCartTotalPrice2").innerText = "$" + @cart?.GetTotalPrice()??0;
             $(function () {
                 // Document.ready -> link up remove event handler
                 $(".removeCartItem").click(function () {
