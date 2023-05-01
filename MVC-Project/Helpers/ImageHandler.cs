@@ -18,7 +18,7 @@ namespace MVC_Project.Helpers
             return image;
         }
 
-        public static string GetImageURI(Image img)
+        public static string? GetImageURI(Image? img)
         {
             string imageDataURL = "";
             if (img != null)

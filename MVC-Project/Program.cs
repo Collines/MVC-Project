@@ -30,6 +30,15 @@ namespace MVC_Project
                 //options.ReturnUrlParameter = "/Account/Dashboard";
             });
 
+            builder.Services.AddDistributedMemoryCache();
+
+            builder.Services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(1000);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
             builder.Services.AddScoped<IRepository<Account>, AccountRepository>();
 
             builder.Services.AddHttpContextAccessor();
@@ -70,6 +79,8 @@ namespace MVC_Project
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.MapRazorPages();
             app.MapControllerRoute(

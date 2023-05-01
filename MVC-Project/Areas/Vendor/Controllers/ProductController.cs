@@ -22,7 +22,7 @@ namespace MVC_Project.Areas.Vendor.Controllers
         // GET: Vendor/Product
         public async Task<IActionResult> Index()
         {
-            var appDBContext = _context.Products.Include(p => p.Brand).Include(p => p.SubCategory);
+            var appDBContext = _context.Products.Include(p => p.Brand).Include(p => p.SubCategory).Include(p=>p.Images);
             return View(await appDBContext.ToListAsync());
         }
 
@@ -65,7 +65,6 @@ namespace MVC_Project.Areas.Vendor.Controllers
             {
                 Image img = ImageHandler.EncodeImage(file);
                 _context.Images.Add(img);
-                _context.SaveChanges();
                 product.Images.Add(img);
             }
 

@@ -1,8 +1,16 @@
-﻿@using Microsoft.EntityFrameworkCore;
-@using shopping.Models;
+﻿@using MVC_Project.Models.Cart;
+@using MVC_Project.Models.Identity;
+@using MVC_Project.Helpers
+@inject AppDBContext DB;
 @{
-    AppDBContext DB = new AppDBContext();
     IEnumerable<Category> Categories = DB.Categories.Include(C=>C.SubCategories).ToList();
+    Account AuthAcc;
+    Cart? cart = null;
+    if (User.Identity.IsAuthenticated)
+    {
+         AuthAcc = DB.Accounts.FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value);
+         cart = DB.Carts.Include(c=>c.CartItems).ThenInclude(ci=>ci.Product).ThenInclude(p=>p.Images).FirstOrDefault(C => C.AccountId == AuthAcc.Id);
+    }
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -45,7 +53,7 @@
                                             @if(User.Identity.IsAuthenticated)
                                             {
                                                 <li><a href="/Account/Dashboard">My Account</a></li>
-                                                <li><a href="checkout.html">Checkout</a></li>
+                                                <li><a href="/ShoppingCart">Checkout</a></li>
                                                 <li><a href="/Account/Logout">Logout</a></li>
                                             } else
                                             {
@@ -99,6 +107,8 @@
                             </form>
                             <!-- Header Middle Searchbox Area End Here -->
                             <!-- Begin Header Middle Right Area -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
                             <div class="header-middle-right">
                                 <ul class="hm-menu">
                                     <!-- Begin Header Middle Wishlist Area -->
@@ -114,26 +124,32 @@
                                         <div class="hm-minicart-trigger">
                                             <span class="item-icon"></span>
                                             <span class="item-text">
-                                                £80.00
-                                                <span class="cart-item-count">2</span>
+                                                <span id="MiniCartTotalPrice2">$00.00</span>
+                                                <span class="cart-item-count" id="cartItemCount">0</span>
                                             </span>
                                         </div>
                                         <span></span>
                                         <div class="minicart">
                                             <ul class="minicart-product-list">
-                                                <li>
-                                                    <a href="single-product.html" class="minicart-product-image">
-                                                        <img src="/images/product/small-size/1.jpg" alt="cart products">
-                                                    </a>
-                                                    <div class="minicart-product-details">
-                                                        <h6><a href="single-product.html">Aenean eu tristique</a></h6>
-                                                        <span>£40 x 1</span>
-                                                    </div>
-                                                    <button class="close">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                </li>
-                                                <li>
+                                                @if(cart != null)
+                                                {
+                                                    @foreach (CartItem ci in cart.CartItems)
+                                                    {
+                                                        <li>
+                                                            <a href="/Product/Details/@ci.ProductId" class="minicart-product-image">
+                                                                <img src="@ImageHandler.GetImageURI(@ci.Product.GetMainImage())" alt="cart products">
+                                                            </a>
+                                                            <div class="minicart-product-details">
+                                                                <h6><a href="/Product/Details/@ci.ProductId">@ci.Product.ProductName</a></h6>
+                                                                <span>@ci.PriceAfterDiscount x @ci.Quantity</span>
+                                                            </div>
+                                                            <button class="close removeCartItem" data-id="@ci.ProductId">
+                                                                <i class="fa fa-close"></i>
+                                                            </button>
+                                                        </li>
+                                                    }
+                                                }
+                                                @*<li>
                                                     <a href="single-product.html" class="minicart-product-image">
                                                         <img src="/images/product/small-size/2.jpg" alt="cart products">
                                                     </a>
@@ -144,14 +160,14 @@
                                                     <button class="close">
                                                         <i class="fa fa-close"></i>
                                                     </button>
-                                                </li>
+                                                </li>*@
                                             </ul>
-                                            <p class="minicart-total">SUBTOTAL: <span>£80.00</span></p>
+                                            <p class="minicart-total">SUBTOTAL: <span id="MiniCartTotalPrice">$0.00</span></p>
                                             <div class="minicart-button">
-                                                <a href="checkout.html" class="li-button li-button-dark li-button-fullwidth li-button-sm">
+                                                <a href="/ShoppingCart" class="li-button li-button-dark li-button-fullwidth li-button-sm">
                                                     <span>View Full Cart</span>
                                                 </a>
-                                                <a href="checkout.html" class="li-button li-button-fullwidth li-button-sm">
+                                                <a href="/ShoppingCart" class="li-button li-button-fullwidth li-button-sm">
                                                     <span>Checkout</span>
                                                 </a>
                                             </div>
@@ -160,7 +176,8 @@
                                     <!-- Header Mini Cart Area End Here -->
                                 </ul>
                             </div>
-                            <!-- Header Middle Right Area End Here -->
+                        }
+                        <!-- Header Middle Right Area End Here -->
                         </div>
                         <!-- Header Middle Right Area End Here -->
                     </div>
@@ -427,7 +444,7 @@
                                     <li><a href="#">Payments</a></li>
                                     <li><a href="#">Warantee</a></li>
                                     <li><a href="#">Refunds</a></li>
-                                    <li><a href="#">Checkout</a></li>
+                                    <li><a href="/Checkout">Checkout</a></li>
                                     <li><a href="#">Discount</a></li>
                                     <li><a href="#">Refunds</a></li>
                                     <li><a href="#">Policy Shipping</a></li>
@@ -458,6 +475,38 @@
     <script src="/~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/min/all.js"></script>
+
+    <script>
+        window.onload = function () {
+            document.getElementById("cartItemCount").innerHTML = @cart?.CartItems.Count??0;
+            document.getElementById("MiniCartTotalPrice").innerText = "$"+@cart?.GetTotalPrice()??0;
+            document.getElementById("MiniCartTotalPrice2").innerText = "$" + @cart?.GetTotalPrice()??0;
+            $(function () {
+                // Document.ready -> link up remove event handler
+                $(".removeCartItem").click(function () {
+                    // Get the id from the link
+                    var recordToDelete = $(this).attr("data-id");
+                    var clicked = $(this);
+                    if (recordToDelete != '') {
+                        // Perform the ajax post
+                        $.post("/ShoppingCart/RemoveFromCart/" + recordToDelete,
+                            function (data) {
+                                debugger
+                                // Successful requests get here
+                                // Update the page elements
+                                $('#cartItemCount').text(data.cartCount);
+                                $('#MiniCartTotalPrice').text(data.cartTotalPrice);
+                                $('#MiniCartTotalPrice2').text(data.cartTotalPrice);
+                                //document.getElementsByClassName("minicart-product-list")[0].removeChild(clicked.parentNode);
+                                clicked.parent().remove();
+                                
+                                $(`#newAdded${clicked.attr("data-id")}`).remove();
+                            });
+                    }
+                });
+            });
+        } //
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,0 +1,102 @@
+﻿@model MVC_Project.Models.Cart.Cart
+@using MVC_Project.Helpers;
+@using MVC_Project.Models.Cart
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+@section fluid{
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="breadcrumb-content">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Shopping Cart</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="Shopping-cart-area pt-60 pb-60">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <form action="#">
+                    <div class="table-content table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="li-product-remove">remove</th>
+                                    <th class="li-product-thumbnail">images</th>
+                                    <th class="cart-product-name">Product</th>
+                                    <th class="li-product-price">Unit Price</th>
+                                    <th class="li-product-quantity">Quantity</th>
+                                    <th class="li-product-subtotal">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if(Model !=null) {
+                                    @foreach (CartItem ci in Model.CartItems)
+                                    {
+                                        <tr>
+                                            <td class="li-product-remove"><a href="#"><i class="fa fa-times"></i></a></td>
+                                            <td class="li-product-thumbnail"><a href="#"><img style="width:150px;height:150px;" src="@ImageHandler.GetImageURI(@ci.Product.GetMainImage())" alt="@ci.Product.ProductName"></a></td>
+                                            <td class="li-product-name"><a href="/Product/Details/@ci.ProductId">@ci.Product.ProductName</a></td>
+                                            <td class="li-product-price"><span class="amount">$@String.Format("{0:0.00}",ci.PriceAfterDiscount)</span></td>
+                                            <td class="quantity">
+                                                <label>Quantity</label>
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box" value="@ci.Quantity" type="text">
+                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div><div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                </div>
+                                            </td>
+                                            <td class="product-subtotal"><span class="amount">$@{
+                                                        var total = ci.Quantity * ci.PriceAfterDiscount;
+                                                    }@String.Format("{0:0.00}",total)
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                } else {
+                                <tr>
+                                    <td colspan="6">You've no Products in the cart</td>
+                                    
+                                </tr>
+                                }
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="coupon-all">
+                                @*<div class="coupon">
+                                    <input id="coupon_code" class="input-text" name="coupon_code" value="" placeholder="Coupon code" type="text">
+                                    <input class="button" name="apply_coupon" value="Apply coupon" type="submit">
+                                </div>*@
+                                <div class="coupon2">
+                                    <input class="button" name="update_cart" value="Update cart" type="submit">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5 ml-auto">
+                            <div class="cart-page-total">
+                                <h2>Cart totals</h2>
+                                <ul>
+                                    <li>Subtotal <span>$@String.Format("{0:0.00}",Model?.GetTotalPrice())</span></li>
+                                    <li>Total <span>$@String.Format("{0:0.00}",Model?.GetTotalPrice())</span></li>
+                                </ul>
+                                <a href="/ShoppingCart/Checkout">Proceed to checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

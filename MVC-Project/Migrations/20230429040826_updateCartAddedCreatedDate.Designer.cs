@@ -4,6 +4,7 @@ using MVC_Project;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVC_Project.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20230429040826_updateCartAddedCreatedDate")]
+    partial class updateCartAddedCreatedDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,21 +36,14 @@ namespace MVC_Project.Migrations
                     b.Property<int>("AccountId")
                         .HasColumnType("int");
 
-                    b.Property<int>("AddressId")
+                    b.Property<int?>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
-                        .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
-
-                    b.Property<double>("DiscountedPrice")
-                        .HasColumnType("float");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
-
-                    b.Property<double>("TotalPrice")
-                        .HasColumnType("float");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
@@ -72,24 +68,20 @@ namespace MVC_Project.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
+                    b.Property<float>("Discount")
+                        .HasColumnType("real");
 
-                    b.Property<double>("DiscountedPrice")
-                        .HasColumnType("float");
+                    b.Property<decimal>("DiscountedPrice")
+                        .HasColumnType("money");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("money");
 
-                    b.Property<double>("PriceAfterDiscount")
-                        .HasColumnType("float");
+                    b.Property<decimal>("PriceAfterDiscount")
+                        .HasColumnType("money");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
-
-                    b.Property<string>("ProductSKU")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -135,9 +127,6 @@ namespace MVC_Project.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SelectedAddressId")
-                        .HasColumnType("int");
 
                     b.Property<int>("UserRole")
                         .HasColumnType("int");
@@ -213,75 +202,6 @@ namespace MVC_Project.Migrations
                     b.ToTable("Phones");
                 });
 
-            modelBuilder.Entity("MVC_Project.Models.Order.Invoice", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AddedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Currency")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("InvoiceNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("TotalPaid")
-                        .HasColumnType("money");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Invoices");
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Order.Order", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AddressId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("InvoiceId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OrderStatus")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PaymentMethod")
-                        .HasColumnType("int");
-
-                    b.Property<double>("TotalPaid")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
-
-                    b.HasIndex("CartId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("InvoiceId");
-
-                    b.ToTable("Orders");
-                });
-
             modelBuilder.Entity("shopping.Models.Brand", b =>
                 {
                     b.Property<int>("Id")
@@ -353,18 +273,8 @@ namespace MVC_Project.Migrations
                     b.Property<int>("BrandID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
-
                     b.Property<bool>("IsAvailable")
                         .HasColumnType("bit");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("money");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
@@ -374,9 +284,6 @@ namespace MVC_Project.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<double>("Rate")
-                        .HasColumnType("float");
-
                     b.Property<string>("SKU")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("nvarchar(max)")
@@ -384,6 +291,13 @@ namespace MVC_Project.Migrations
 
                     b.Property<int>("SubCategoryId")
                         .HasColumnType("int");
+
+                    b.Property<string>("description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("price")
+                        .HasColumnType("money");
 
                     b.HasKey("ProductId");
 
@@ -449,9 +363,7 @@ namespace MVC_Project.Migrations
 
                     b.HasOne("MVC_Project.Models.Identity.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
 
                     b.Navigation("Account");
 
@@ -497,39 +409,6 @@ namespace MVC_Project.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
-                });
-
-            modelBuilder.Entity("MVC_Project.Models.Order.Order", b =>
-                {
-                    b.HasOne("MVC_Project.Models.Identity.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MVC_Project.Models.Cart.Cart", "Cart")
-                        .WithMany()
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MVC_Project.Models.Identity.Account", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MVC_Project.Models.Order.Invoice", "Invoice")
-                        .WithMany()
-                        .HasForeignKey("InvoiceId");
-
-                    b.Navigation("Address");
-
-                    b.Navigation("Cart");
-
-                    b.Navigation("Customer");
-
-                    b.Navigation("Invoice");
                 });
 
             modelBuilder.Entity("shopping.Models.Image", b =>
