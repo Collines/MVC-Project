@@ -43,13 +43,20 @@ namespace MVC_Project
 
             builder.Services.AddHttpContextAccessor();
 
+            builder.Services.AddAuthentication()
+                .AddFacebook(options =>
+                {
+                    options.AppId = "627566358815552";
+                    options.AppSecret = "962ba10f3ea8908969cdc8ab88b41add";
+                });
+
             var app = builder.Build();
 
             // Seeding Data
             using (var scope = app.Services.CreateScope())
             {
                 var db = scope.ServiceProvider.GetRequiredService<AppDBContext>();
-                AppDBContextSeeder.SeedData(db, isDynamicSeeding: true);
+                AppDBContextSeeder.SeedData(db, isDynamicSeeding: false);
             }
             ////////
 
