@@ -28,7 +28,7 @@ namespace MVC_Project.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return View(DB.Accounts.Include(A => A.Addresses).FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value));
+                return View(DB.Accounts.Include(A => A.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value));
             }
             return RedirectToAction("Login");
         }
@@ -131,7 +131,7 @@ namespace MVC_Project.Controllers
         public async Task<IActionResult> AddAddress(string address, string appartmentSuite, string townCity, string State, string Zipcode)
         {
             var x = Request;
-            var Acc = DB.Accounts.FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value);
+            var Acc = DB.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
             Address add = new Address
             {
                 Addr = address,
@@ -159,7 +159,7 @@ namespace MVC_Project.Controllers
         [Authorize]
         public async Task<IActionResult> SetDefaultAddress(int id)
         {
-            Account? account = DB.Accounts.Include(a => a.Addresses).FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value);
+            Account? account = DB.Accounts.Include(a => a.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
             if (account.HasAddress(id))
             {
                 account.SelectedAddressId = id;

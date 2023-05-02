@@ -8,12 +8,21 @@
 
     Account? AuthAcc;
     Cart? cart = null;
+
+    string CartTotalPrice = "00.00";
+    string CartCount = "0";
+
     if (User.Identity.IsAuthenticated)
     {
         AuthAcc = DB.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
         if (AuthAcc != null)
         {
             cart = DB.Carts.Include(c => c.CartItems).ThenInclude(ci => ci.Product).ThenInclude(p => p.Images).FirstOrDefault(C => C.AccountId == AuthAcc.Id);
+            if (cart != null)
+            {
+                CartCount = cart!.CartItems.Count.ToString();
+                CartTotalPrice = cart!.GetTotalPrice().ToString();
+            }
         }
     }
 }
@@ -136,8 +145,8 @@
                                         <div class="hm-minicart-trigger">
                                             <span class="item-icon"></span>
                                             <span class="item-text">
-                                                <span id="MiniCartTotalPrice2">$00.00</span>
-                                                <span class="cart-item-count" id="cartItemCount">0</span>
+                                                <span id="MiniCartTotalPrice2">@CartTotalPrice</span>
+                                                <span class="cart-item-count" id="cartItemCount">@CartCount</span>
                                             </span>
                                         </div>
                                         <span></span>
@@ -487,38 +496,6 @@
     <script src="/~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="/~/js/site.js" asp-append-version="true"></script>*@
     <script src="~/js/min/all.js"></script>
-
-    <script>
-        window.onload = function () {
-            document.getElementById("cartItemCount").innerHTML = @cart?.CartItems.Count??0;
-            document.getElementById("MiniCartTotalPrice").innerText = "$"+@cart?.GetTotalPrice()??0;
-            document.getElementById("MiniCartTotalPrice2").innerText = "$" + @cart?.GetTotalPrice()??0;
-            $(function () {
-                // Document.ready -> link up remove event handler
-                $(".removeCartItem").click(function () {
-                    // Get the id from the link
-                    var recordToDelete = $(this).attr("data-id");
-                    var clicked = $(this);
-                    if (recordToDelete != '') {
-                        // Perform the ajax post
-                        $.post("/ShoppingCart/RemoveFromCart/" + recordToDelete,
-                            function (data) {
-                                debugger
-                                // Successful requests get here
-                                // Update the page elements
-                                $('#cartItemCount').text(data.cartCount);
-                                $('#MiniCartTotalPrice').text(data.cartTotalPrice);
-                                $('#MiniCartTotalPrice2').text(data.cartTotalPrice);
-                                //document.getElementsByClassName("minicart-product-list")[0].removeChild(clicked.parentNode);
-                                clicked.parent().remove();
-                                
-                                $(`#newAdded${clicked.attr("data-id")}`).remove();
-                            });
-                    }
-                });
-            });
-        } //
-    </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

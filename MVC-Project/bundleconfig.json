@@ -44,6 +44,7 @@
       "wwwroot/js/jquery.nice-select.min.js",
       "wwwroot/js/scrollUp.min.js",
       "wwwroot/js/main.js",
+      "wwwroot/js/cart.js",
       "wwwroot/js/jquery-validate/jquery.validate.min.js",
       "wwwroot/js/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
     ],
