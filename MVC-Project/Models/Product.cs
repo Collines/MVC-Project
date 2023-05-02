@@ -29,14 +29,14 @@ namespace shopping.Models
         [RegularExpression("^(([1-9]*)|(([1-9]*)))$")]
         public required int Quantity { get; set; }
 
-        [Range(0,100)]
+        [Range(0, 100)]
         [RegularExpression("^(([1-9]*)|(([1-9]*)\\.([0-9]*)))$")]
         [DefaultValue(0.00)]
         public double Discount { get; set; }
 
         [RegularExpression("^(([1-9*)|(([1-9]*)\\.([0-9]*)))$")]
         [DefaultValue(0.00)]
-        public double Rate { get; set; }  
+        public double Rate { get; set; }
         public virtual ICollection<Image> Images { get; set; } = new List<Image>();
 
         [Required]
@@ -69,5 +69,6 @@ namespace shopping.Models
 
         public double PriceAfterDiscount() => Price * (1 - Discount / 100);
         public double DiscountedAmount() => Price * (Discount / 100);
+        public bool IsInStock() => Quantity > 0;
     }
 }
