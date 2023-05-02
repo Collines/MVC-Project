@@ -2,6 +2,7 @@
 @using MVC_Project.Helpers;
 @{
     ViewData["Title"] = "Home Page";
+    var products = (List<Product>)ViewBag.AllProducts;
 }
 
 @foreach(Subcategory sub in Model) {
@@ -37,30 +38,36 @@
                                                 <div class="product_desc_info">
                                                     <div class="product-review">
                                                         <h5 class="manufacturer">
-                                                            <a href="product-details.html">@product.Brand?.Name</a>
+                                                            <a href="/Product/Details/@product.ProductId">@product.Brand?.Name</a>
                                                         </h5>
                                                         <div class="rating-box">
                                                             <ul class="rating">
-                                                                <li><i class="fa fa-star-o"></i></li>
-                                                                <li><i class="fa fa-star-o"></i></li>
-                                                                <li><i class="fa fa-star-o"></i></li>
-                                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
-                                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                                                
+                                                                    @for (var i = 0; i < product.Rate; i++)
+                                                                    {
+                                                                        <li><i class="fa fa-star-o"></i></li>
+
+                                                                    }
+
+                                                                    @for (var i = 0; i < 5 - product.Rate; i++)
+                                                                    {
+                                                                        <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                                                    }                                 
                                                             </ul>
                                                         </div>
                                                     </div>
                                                     <h4><a class="product_name" href="/Product/Details/@product.ProductId">@product.ProductName</a></h4>
                                                     <div class="price-box">
-                                                        <span class="new-price new-price-2">@product.Price EGP</span>
+                                                        <span class="new-price new-price-2">@product.PriceAfterDiscount() EGP</span>
                                                         <span class="old-price">@product.Price EGP</span>
-                                                        <span class="discount-percentage">-7%</span>
+                                                        <span class="discount-percentage">@product.Discount</span>
                                                     </div>
                                                 </div>
                                                 <div class="add-actions">
                                                     <ul class="add-actions-link">
                                                         <li class="add-cart active add-to-cart" data-id="@product.ProductId"><a href="#">Add to cart</a></li>
                                                         <li><a class="links-details" href="single-product.html"><i class="fa fa-heart-o"></i></a></li>
-                                                        <li><a class="quick-view" data-toggle="modal" data-target="#exampleModalCenter" href="#"><i class="fa fa-eye"></i></a></li>
+                                                        <li><a class="quick-view" data-toggle="modal" data-target="#exampleModalCenter-@product.ProductId" href="#"><i class="fa fa-eye"></i></a></li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -79,6 +86,119 @@
     }
     counter++;
 }
+
+@foreach (var item in products)
+{
+    <div class="modal fade modal-wrapper" id="exampleModalCenter-@item.ProductId">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                    <div class="modal-inner-area row">
+                        <div class="col-lg-5 col-md-6 col-sm-6">
+                            <!-- Product Details Left -->
+                            <div class="product-details-left">
+                                <div class="product-details-images slider-navigation-1">
+                                    @{
+
+                                        var img = item.GetMainImage();
+                                        string imageDataURL = ImageHandler.GetImageURI(img);
+                                        List<string> Images = new();
+                                    }
+                                  
+                                    @foreach(Image img2 in item.Images)
+                                    {
+                                        if (img != null)
+                                            Images.Add(ImageHandler.GetImageURI(img2));
+                                    }
+                                    @foreach (string url in Images)
+                                    {
+                                        <div class="lg-image">
+                                            <a class="popup-img venobox vbox-item" href="@url" data-gall="myGallery">
+                                                <img src="@url" alt="product image">
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                                <div class="product-details-thumbs slider-thumbs-1">
+                                    @foreach (string url in Images)
+                                    {
+                                        <div class="sm-image"><img src="@url" alt="product image thumb"></div>
+                                    }
+
+                                </div>
+                            </div>
+                            <!--// Product Details Left -->
+                        </div>
+
+                        <div class="col-lg-7 col-md-6 col-sm-6">
+                            <div class="product-details-view-content pt-60">
+                                <div class="product-info">
+                                    <h2>@item.ProductName</h2>
+                                    <div class="rating-box pt-20">
+                                        <ul class="rating rating-with-review-item">
+                                            @for (var i = 0; i < item.Rate; i++)
+                                            {
+                                                <li><i class="fa fa-star-o"></i></li>
+
+                                            }
+
+                                            @for (var i = 0; i < 5 - item.Rate; i++)
+                                            {
+                                                <li class="no-star"><i class="fa fa-star-o"></i></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                    <div class="price-box pt-20">
+                                        <span class="new-price new-price-2">@item.PriceAfterDiscount() EGP</span>
+                                        <span class="old-price"><del>@item.Price EGP</del></span>
+                                        <span class="discount-percentage">@item.Discount</span>
+                                    </div>
+                                    <div class="product-desc">
+                                        <p>
+                                            <span>
+                                                @item.Description
+                                            </span>
+                                        </p>
+                                    </div>
+
+                                    <div class="single-add-to-cart">
+                                        <form action="#" class="cart-quantity">
+                                            <div class="quantity">
+                                                <label>Quantity</label>
+                                                <div class="cart-plus-minus">
+                                                    <input class="cart-plus-minus-box" value="1" type="text">
+                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div>
+                                                    <div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                    <div class="dec qtybutton"><i class="fa fa-angle-down"></i></div><div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>
+                                                </div>
+                                            </div>
+                                            <button class="add-to-cart" data-id="@item.ProductId" type="submit">Add to cart</button>
+                                        </form>
+                                    </div>
+                                    <div class="product-additional-info pt-25">
+                                        <a class="wishlist-btn" href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a>
+                                        <div class="product-social-sharing pt-25">
+                                            <ul>
+                                                <li class="facebook"><a href="#"><i class="fa fa-facebook"></i>Facebook</a></li>
+                                                <li class="twitter"><a href="#"><i class="fa fa-twitter"></i>Twitter</a></li>
+                                                <li class="google-plus"><a href="#"><i class="fa fa-google-plus"></i>Google +</a></li>
+                                                <li class="instagram"><a href="#"><i class="fa fa-instagram"></i>Instagram</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @section Scripts {
     <script type="text/javascript">
         $(function () {

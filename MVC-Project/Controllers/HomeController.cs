@@ -19,6 +19,10 @@ namespace MVC_Project.Controllers
         {
             List<Subcategory> subcategories = _context.Subcategories.Include(S => S.Products).ThenInclude(P => P.Brand).Include(S => S.Products).ThenInclude(P => P.Images).ToList();
 
+            List<Product> products = _context.Products.Include(P => P.Brand).Include(c => c.SubCategory).Include(I=> I.Images).ToList();
+
+            ViewBag.AllProducts = products;
+
             return View(subcategories);
         }
 
