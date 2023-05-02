@@ -1,19 +1,7 @@
 ﻿@model shopping.Models.Product
-
+@inject AppDBContext DB;
 @{
     ViewData["Title"] = Model.ProductName + " - Details";
-}
-@section fluid {
-    <div class="breadcrumb-area">
-        <div class="container">
-            <div class="breadcrumb-content">
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li class="active">@Model.ProductName</li>
-                </ul>
-            </div>
-        </div>
-    </div>
 }
 <!-- Li's Breadcrumb Area End Here -->
 <!-- content-wraper start -->
@@ -66,9 +54,16 @@
                             </ul>
                         </div>
                         <div class="price-box pt-20">
-                            <span class="new-price">@Model.PriceAfterDiscount() EGP - </span>
-                            <span style="font-size:19px" class="old-price"><del>@Model.Price EGP</del></span>
-                            <span class="discount-percentage" style="font-size:25px;font-weight:bold">@Model.Discount %</span>
+                            @if (Model.Discount > 0)
+                            {
+                                <span class="new-price new-price-2">@Model.PriceAfterDiscount() EGP - </span>
+                                <span style="font-size:19px" class="old-price"><del>@Model.Price EGP</del></span>
+                                <span class="discount-percentage" style="font-size:25px;font-weight:bold">@Model.Discount %</span>
+                            }
+                            else
+                            {
+                                <span class="new-price">@Model.Price EGP - </span>
+                            }    
                         
                         </div>
                         <div class="product-desc">
@@ -102,15 +97,21 @@
                             </form>
                         </div>
                         <div class="product-additional-info pt-25">
-                            <a class="wishlist-btn" href="wishlist.html"><i class="fa fa-heart-o"></i>Add to wishlist</a>
-                            <div class="product-social-sharing pt-25">
-                                <ul>
-                                    <li class="facebook"><a href="#"><i class="fa fa-facebook"></i>Facebook</a></li>
-                                    <li class="twitter"><a href="#"><i class="fa fa-twitter"></i>Twitter</a></li>
-                                    <li class="google-plus"><a href="#"><i class="fa fa-google-plus"></i>Google +</a></li>
-                                    <li class="instagram"><a href="#"><i class="fa fa-instagram"></i>Instagram</a></li>
-                                </ul>
-                            </div>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                @if (DB.Wishlists.Any(w => w.ProductID == Model.ProductId))
+                                {
+                                    <a asp-area="" asp-controller="Wishlist" asp-action="RemoveFromWishlist" asp-route-id="@Model.ProductId"><i class="fa fa-heart"></i> Remove from wishlist</a>
+                                }
+                                else
+                                {
+                                    <a asp-area="" asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@Model.ProductId"><i class="fa fa-heart-o"></i> Add to wishlist</a>
+                                }
+                            }
+                            else
+                            {
+                                <a asp-area="" asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@Model.ProductId"><i class="fa fa-heart-o"></i> Add to wishlist</a>
+                            }
                         </div>
                         <div class="block-reassurance">
                             <ul>
