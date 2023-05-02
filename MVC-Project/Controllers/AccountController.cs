@@ -64,9 +64,15 @@ namespace MVC_Project.Controllers
             {
                 account.Password = PasswordHandler.Hash(account.Password, out byte[] Salt);
                 account.HashSalt = Convert.ToHexString(Salt);
-                AccRepo.Insert(account);
+
+                DB.Accounts.Add(account);
+                await DB.SaveChangesAsync();
+
+                var accountId = account.Id;
+
                 var claims = new List<Claim>
                 {
+                    new Claim("AccountId", accountId.ToString()),
                     new Claim(ClaimTypes.Email, account.Email),
                     new Claim(ClaimTypes.Name, $"{account.Firstname} {account.Lastname}"),
                     new Claim("Password", account.Password),
@@ -90,6 +96,7 @@ namespace MVC_Project.Controllers
                 {
                     var claims = new List<Claim>
                         {
+                            new Claim("AccountId", account.Id.ToString()),
                             new Claim(ClaimTypes.Email, email),
                             new Claim(ClaimTypes.Name, $"{account.Firstname} {account.Lastname}"),
                             new Claim("Password", password),
@@ -205,12 +212,16 @@ namespace MVC_Project.Controllers
                 };
                 user.Password = PasswordHandler.Hash(user.Password, out byte[] Salt);
                 user.HashSalt = Convert.ToHexString(Salt);
-                AccRepo.Insert(user);
+
+                DB.Accounts.Add(user);
+                await DB.SaveChangesAsync();
             }
+            var accountId = user.Id;
 
             // Sign in the user
             var claims = new List<Claim>
             {
+                new Claim("AccountId", accountId.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Name, $"{user.Firstname} {user.Lastname}"),
                 new Claim("Password", user.Password),

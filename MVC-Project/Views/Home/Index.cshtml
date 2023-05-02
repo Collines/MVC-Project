@@ -1,5 +1,7 @@
 ﻿@model List<Subcategory>;
 @using MVC_Project.Helpers;
+@using MVC_Project.Models.Identity;
+@inject AppDBContext DB;
 @{
     ViewData["Title"] = "Home Page";
     var products = (List<Product>)ViewBag.AllProducts;
@@ -66,7 +68,21 @@
                                                 <div class="add-actions">
                                                     <ul class="add-actions-link">
                                                         <li class="add-cart active add-to-cart" data-id="@product.ProductId"><a href="#">Add to cart</a></li>
-                                                        <li><a class="links-details" href="single-product.html"><i class="fa fa-heart-o"></i></a></li>
+                                                        @if (User.Identity.IsAuthenticated)
+                                                        {
+                                                            @if (DB.Wishlists.Any(w => w.ProductID == product.ProductId))
+                                                            {
+                                                                <li><a asp-area="" asp-controller="Wishlist" asp-action="RemoveFromWishlist" asp-route-id="@product.ProductId"><i class="fa fa-heart"></i></a></li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li><a asp-area="" asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@product.ProductId"><i class="fa fa-heart-o"></i></a></li>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <li><a asp-area="" asp-controller="Wishlist" asp-action="AddToWishlist" asp-route-id="@product.ProductId"><i class="fa fa-heart-o"></i></a></li>
+                                                        }
                                                         <li><a class="quick-view" data-toggle="modal" data-target="#exampleModalCenter-@product.ProductId" href="#"><i class="fa fa-eye"></i></a></li>
                                                     </ul>
                                                 </div>

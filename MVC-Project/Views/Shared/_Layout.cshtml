@@ -4,12 +4,17 @@
 @inject AppDBContext DB;
 @{
     IEnumerable<Category> Categories = DB.Categories.Include(C=>C.SubCategories).ToList();
-    Account AuthAcc;
+    var WishlistCount = DB.Wishlists.ToList().Count(); 
+
+    Account? AuthAcc;
     Cart? cart = null;
     if (User.Identity.IsAuthenticated)
     {
-         AuthAcc = DB.Accounts.FirstOrDefault(A => A.Email == User.Claims.FirstOrDefault().Value);
-         cart = DB.Carts.Include(c=>c.CartItems).ThenInclude(ci=>ci.Product).ThenInclude(p=>p.Images).FirstOrDefault(C => C.AccountId == AuthAcc.Id);
+        AuthAcc = DB.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
+        if (AuthAcc != null)
+        {
+            cart = DB.Carts.Include(c => c.CartItems).ThenInclude(ci => ci.Product).ThenInclude(p => p.Images).FirstOrDefault(C => C.AccountId == AuthAcc.Id);
+        }
     }
 }
 <!DOCTYPE html>
@@ -113,9 +118,16 @@
                                 <ul class="hm-menu">
                                     <!-- Begin Header Middle Wishlist Area -->
                                     <li class="hm-wishlist">
-                                        <a href="wishlist.html">
-                                            <span class="cart-item-count wishlist-item-count">0</span>
-                                            <i class="fa fa-heart-o"></i>
+                                        <a asp-area="" asp-controller="Wishlist" asp-action="Index">
+                                            <span class="cart-item-count wishlist-item-count">@WishlistCount</span>
+                                            @if (WishlistCount > 0)
+                                            {
+                                                <i class="fa fa-heart"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-heart-o"></i>
+                                            }
                                         </a>
                                     </li>
                                     <!-- Header Middle Wishlist Area End Here -->
