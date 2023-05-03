@@ -22,7 +22,7 @@ namespace MVC_Project.Controllers
         public IActionResult Index()
         {
             Account? owner = Context.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
-            Cart cart = Context.Carts.Include(c => c.CartItems).ThenInclude(ci => ci.Product).ThenInclude(p => p.Images).FirstOrDefault(C => C.AccountId == owner.Id);
+            Cart? cart = Context.Carts.Include(c => c.CartItems).ThenInclude(ci => ci.Product).ThenInclude(p => p.Images).FirstOrDefault(C => C.AccountId == owner.Id);
             return View(cart);
         }
 
@@ -32,6 +32,50 @@ namespace MVC_Project.Controllers
             Account? owner = Context.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
             Cart cart = Context.Carts.Include(c => c.CartItems).ThenInclude(ci => ci.Product).ThenInclude(p => p.Images).FirstOrDefault(C => C.AccountId == owner.Id);
             return View(cart);
+        }
+
+        [Authorize]
+        [HttpPost]
+
+        public IActionResult UpdateCart(Dictionary<int, CartItem>? cartItems)
+        {
+            if (cartItems != null)
+            {
+                if (cartItems.Any())
+                {
+                    foreach (var item in cartItems.Values)
+                    {
+                        var cartItem = Context.CartItems.Find(item.Id);
+                        if (cartItem != null)
+                        {
+                            if (item.Quantity > 0)
+                            {
+                                cartItem.Quantity = item.Quantity;
+                            }
+                            else
+                            {
+                                Context.Remove(cartItem);
+                            }
+                        }
+                    }
+                }
+                Context.SaveChanges();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize]
+        public IActionResult RemoveCartItem(int id)
+        {
+            var cartItem = Context.CartItems.Find(id);
+            if (cartItem != null)
+            {
+                Context.Remove(cartItem);
+            }
+            Context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize]
