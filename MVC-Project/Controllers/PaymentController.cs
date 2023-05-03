@@ -30,7 +30,7 @@ namespace MVC_Project.Controllers
         [HttpGet("Payment/PaymentWithPaypal/{CartId:int}")]
         public ActionResult PaymentWithPaypal(int CartId, string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
-            Cart? cart = Context.Carts.Include(C => C.Account).Include(c=>c.CartItems).ThenInclude(ci=>ci.Product)/*.Include(C => C.CartItems)*/.FirstOrDefault(C => C.Id == CartId);
+            Cart? cart = Context.Carts.Include(C => C.Account).Include(c => c.CartItems).ThenInclude(ci => ci.Product)/*.Include(C => C.CartItems)*/.FirstOrDefault(C => C.Id == CartId);
             string? email = User.Claims.FirstOrDefault()?.Value;
             Models.Order.Order? order = Context.Orders.Find(httpContextAccessor?.HttpContext?.Session.GetInt32("order"));
 
@@ -88,7 +88,7 @@ namespace MVC_Project.Controllers
                         }
                         else
                         {
-                            
+
                             // This function exectues after receving all parameters for the payment  
 
                             var paymentId = httpContextAccessor.HttpContext.Session.GetString("payment");
@@ -208,17 +208,18 @@ namespace MVC_Project.Controllers
             };
             Context.Add(inv);
             Context.SaveChanges();
-            Models.Order.Order order = new Models.Order.Order()
+            var user = Context.Accounts.FirstOrDefault(a => a.Id == cart.AccountId);
+            Models.Order.Order order = new()
             {
                 CustomerId = cart.AccountId,
-                AddressId = cart.AddressId,
+                AddressId = user.SelectedAddressId,
                 CartId = cart.Id,
-                OrderStatus = Models.Order.OrderStatus.PendingPayment,
-                PaymentMethod = Models.Order.PaymentMethod.Paypal,
+                OrderStatus = OrderStatus.PendingPayment,
+                PaymentMethod = PaymentMethod.Paypal,
                 TotalPaid = cart.GetTotalPrice(),
                 InvoiceId = inv.Id
             };
-          
+
             Context.Orders.Add(order);
             Context.SaveChanges();
             httpContextAccessor.HttpContext.Session.SetInt32("order", order.Id);

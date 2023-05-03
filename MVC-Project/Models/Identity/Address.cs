@@ -11,7 +11,7 @@ namespace MVC_Project.Models.Identity
         public required string Addr { get; set; }
 
         [MaxLength(5)]
-        [RegularExpression("^(([0-9]*)|(([0-9]*)\\.([0-9]*)))$",ErrorMessage ="Appartment/Suite should be a number")]
+        [RegularExpression("^(([0-9]*)|(([0-9]*)\\.([0-9]*)))$", ErrorMessage = "Appartment/Suite should be a number")]
         public string? AppartmentSuite { get; set; }
 
         [Required]
@@ -32,6 +32,6 @@ namespace MVC_Project.Models.Identity
         public int AccountId { get; set; }
         public virtual Account? Account { get; set; }
 
-        public bool IsDefault() => Id == Account.SelectedAddressId;
-	}
+        public bool IsDefault() => Id == Account?.SelectedAddressId;
+    }
 }

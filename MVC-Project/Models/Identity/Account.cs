@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Mvc;
 
 namespace MVC_Project.Models.Identity
 {
@@ -17,7 +17,7 @@ namespace MVC_Project.Models.Identity
 
         [MaxLength(30)]
         [Required]
-        [Display(Name ="First Name")]
+        [Display(Name = "First Name")]
         public required string Firstname { get; set; }
 
         [MaxLength(30)]
@@ -37,16 +37,15 @@ namespace MVC_Project.Models.Identity
 
         [Required]
         [DataType(DataType.Password)]
-        [Compare("Password",ErrorMessage ="Password should match")]
+        [Compare("Password", ErrorMessage = "Password should match")]
         [NotMapped]
-        [Display(Name="Confirm Password")]
+        [Display(Name = "Confirm Password")]
         public string ConfirmPassowrd { get; set; }
 
         [HiddenInput]
         public string? HashSalt { get; set; }
 
-        [ForeignKey("Address")]
-        public int SelectedAddressId { get; set; }
+        public int SelectedAddressId { get; set; } = -1;
 
         public virtual ICollection<Phone> PhoneNumbers { get; set; } = new List<Phone>();
         public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
@@ -54,14 +53,14 @@ namespace MVC_Project.Models.Identity
         public bool IsActive { get; set; } = true;
 
         [Required]
-        [EnumDataType(enumType:typeof(Role))]
+        [EnumDataType(enumType: typeof(Role))]
         public Role UserRole { get; set; } = Role.Customer;
 
         public bool HasAddress(int addressId)
         {
-            foreach(Address address in Addresses)
+            foreach (Address address in Addresses)
             {
-                if(address.Id== addressId)
+                if (address.Id == addressId)
                     return true;
             }
             return false;
