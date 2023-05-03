@@ -4,7 +4,7 @@
 @inject AppDBContext DB;
 @{
     IEnumerable<Category> Categories = DB.Categories.Include(C=>C.SubCategories).ToList();
-    var WishlistCount = DB.Wishlists.ToList().Count(); 
+    var WishlistCount = DB.Wishlists.Where(w => w.AccountID.ToString() == User.Claims.FirstOrDefault().Value).ToList().Count();
 
     Account? AuthAcc;
     Cart? cart = null;

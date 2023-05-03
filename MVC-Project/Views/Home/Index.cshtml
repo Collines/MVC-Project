@@ -78,7 +78,7 @@
                                                         <li class="add-cart active add-to-cart" data-id="@product.ProductId"><a>Add to cart</a></li>
                                                         @if (User.Identity.IsAuthenticated)
                                                         {
-                                                            @if (DB.Wishlists.Any(w => w.ProductID == product.ProductId))
+                                                            @if (DB.Wishlists.Any(w => w.ProductID == product.ProductId && w.AccountID.ToString() == User.Claims.FirstOrDefault().Value))
                                                             {
                                                                 <li><a asp-area="" asp-controller="Wishlist" asp-action="RemoveFromWishlist" asp-route-id="@product.ProductId"><i class="fa fa-heart"></i></a></li>
                                                             }

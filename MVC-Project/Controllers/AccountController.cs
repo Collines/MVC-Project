@@ -130,7 +130,6 @@ namespace MVC_Project.Controllers
         [Authorize]
         public async Task<IActionResult> AddAddress(string address, string appartmentSuite, string townCity, string State, string Zipcode)
         {
-            var x = Request;
             var Acc = DB.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
             Address add = new Address
             {
@@ -140,6 +139,8 @@ namespace MVC_Project.Controllers
                 State = State,
                 Zipcode = Zipcode
             };
+            if (Acc.Addresses.Count == 0)
+                add.IsDefault = true;
             Acc.Addresses.Add(add);
             DB.SaveChanges();
             return Json(new
@@ -160,9 +161,12 @@ namespace MVC_Project.Controllers
         public async Task<IActionResult> SetDefaultAddress(int id)
         {
             Account? account = DB.Accounts.Include(a => a.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
-            if (account.HasAddress(id))
+            Address defaultAddress = account.Addresses.Where(a => a.IsDefault == true).Select(a=>a).FirstOrDefault();
+            if (account.HasAddress(id) && defaultAddress != null)
             {
-                account.SelectedAddressId = id;
+                Address? address = DB.Addresses.Find(id);
+                defaultAddress.IsDefault = false;
+                address.IsDefault = true;
                 DB.SaveChanges();
                 return Json(new
                 {

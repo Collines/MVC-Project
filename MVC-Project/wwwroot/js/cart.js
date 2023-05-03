@@ -1,4 +1,4 @@
-﻿$(document).ready(function () {
+﻿    console.log('inside cart.js')
     function renderCartItems(cartItems) {
         debugger;
         var html = "";
@@ -60,4 +60,3 @@
                 });
         }
     });
-});

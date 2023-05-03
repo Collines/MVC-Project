@@ -45,8 +45,6 @@ namespace MVC_Project.Models.Identity
         [HiddenInput]
         public string? HashSalt { get; set; }
 
-        public int SelectedAddressId { get; set; } = -1;
-
         public virtual ICollection<Phone> PhoneNumbers { get; set; } = new List<Phone>();
         public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
@@ -64,6 +62,16 @@ namespace MVC_Project.Models.Identity
                     return true;
             }
             return false;
+        }
+
+        public int SelectedAddress()
+        {
+            foreach(Address a in Addresses)
+            {
+                if(a.IsDefault==true)
+                    return a.Id;
+            }
+            return -1;
         }
     }
 }
