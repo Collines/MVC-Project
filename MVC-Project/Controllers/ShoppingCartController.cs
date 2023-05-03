@@ -58,7 +58,7 @@ namespace MVC_Project.Controllers
 
                         if (cart != null)
                         {
-                            CartItem? cartItem = Context.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
+                            CartItem? cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
 
                             if (cartItem != null)
                             {
@@ -82,8 +82,8 @@ namespace MVC_Project.Controllers
                             }
                             Context.SaveChanges();
 
-                            cart.TotalPrice = cart.CartItems.Sum(ci => ci.Price * ci.Quantity);
-                            cart.DiscountedPrice = cart.CartItems.Sum(ci => ci.DiscountedPrice * ci.Quantity);
+                            cart.TotalPrice = cart.GetTotalPrice();
+                            cart.DiscountedPrice = cart.GetDiscountedPrice();
 
                             Context.SaveChanges();
 
@@ -141,7 +141,7 @@ namespace MVC_Project.Controllers
 
                         if (cart != null)
                         {
-                            CartItem? cartItem = Context.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
+                            CartItem? cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
 
                             if (cartItem != null)
                             {
@@ -157,8 +157,8 @@ namespace MVC_Project.Controllers
                                 Context.SaveChanges();
                             }
 
-                            cart.TotalPrice = cart.CartItems.Sum(ci => ci.Price * ci.Quantity);
-                            cart.DiscountedPrice = cart.CartItems.Sum(ci => ci.DiscountedPrice * ci.Quantity);
+                            cart.TotalPrice = cart.GetTotalPrice();
+                            cart.DiscountedPrice = cart.GetDiscountedPrice();
 
                             Context.SaveChanges();
 
