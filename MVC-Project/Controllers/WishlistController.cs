@@ -39,7 +39,7 @@ namespace MVC_Project.Controllers
             var userIdClaim = claimsPrincipal.FindFirst("AccountId");
             var userId = userIdClaim?.Value;
 
-            var wishlist = _context.Wishlists.FirstOrDefault(w => w.ProductID == id);
+            var wishlist = _context.Wishlists.FirstOrDefault(w => w.ProductID == id && w.AccountID.ToString() == userId);
 
             if (wishlist == null)
             {
@@ -60,7 +60,7 @@ namespace MVC_Project.Controllers
         [Authorize]
         public async Task<IActionResult> RemoveFromWishlist(int id)
         {
-            var wishlistItem = await _context.Wishlists.FirstOrDefaultAsync(w => w.ProductID == id);
+            var wishlistItem = await _context.Wishlists.FirstOrDefaultAsync(w => w.ProductID == id && w.AccountID.ToString() == User.FindFirst("AccountId").Value);
             if (wishlistItem == null)
             {
                 return NotFound();

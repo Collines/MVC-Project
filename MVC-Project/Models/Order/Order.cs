@@ -44,7 +44,7 @@ namespace MVC_Project.Models.Order
         public required PaymentMethod PaymentMethod { get; set; }
 
         [ForeignKey("Invoice")]
-        public int? InvoiceId { get; set; }
+        public int InvoiceId { get; set; }
 
         public virtual Invoice? Invoice { get; set; }
         public virtual Address? Address { get; set; }

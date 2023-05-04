@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVC_Project.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    [Migration("20230430183120_AddedOrderAndInvoiceEntities")]
+    [Migration("20230502013016_AddedOrderAndInvoiceEntities")]
     partial class AddedOrderAndInvoiceEntities
     {
         /// <inheritdoc />

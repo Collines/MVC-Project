@@ -130,8 +130,7 @@ namespace MVC_Project.Controllers
         [Authorize]
         public async Task<IActionResult> AddAddress(string address, string appartmentSuite, string townCity, string State, string Zipcode)
         {
-            var x = Request;
-            var Acc = DB.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
+            var Acc = DB.Accounts.Include(a=>a.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
             Address add = new Address
             {
                 Addr = address,
@@ -140,11 +139,13 @@ namespace MVC_Project.Controllers
                 State = State,
                 Zipcode = Zipcode
             };
+            if (Acc.Addresses.Count == 0)
+                add.IsDefault = true;
             Acc.Addresses.Add(add);
             DB.SaveChanges();
             return Json(new
             {
-                Success = false,
+                Success = true,
                 Message = "Added successfully",
                 addedadd = new
                 {
@@ -156,13 +157,68 @@ namespace MVC_Project.Controllers
                 }
             });
         }
+
         [Authorize]
+		public async Task<IActionResult> EditAddress(int id,string address, string appartmentSuite, string townCity, string State, string Zipcode)
+		{
+			var Acc = DB.Accounts.Include(a=>a.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
+            if(Acc!=null && Acc.HasAddress(id))
+            {
+                var EditedAddress = DB.Addresses.FirstOrDefault(a => a.Id == id && a.AccountId == Acc.Id);
+                EditedAddress.Addr = address ?? EditedAddress.Addr;
+                EditedAddress.AppartmentSuite = appartmentSuite ?? EditedAddress.AppartmentSuite;
+                EditedAddress.TownCity = townCity ?? EditedAddress.TownCity;
+                EditedAddress.State = State ?? EditedAddress.State;
+                EditedAddress.Zipcode = Zipcode ?? EditedAddress.Zipcode;
+
+				DB.SaveChanges();
+				return Json(new
+				{
+					Success = true,
+					Message = "Edit successfully"
+				});
+			}
+			return Json(new
+			{
+				Success = false,
+				Message = "Not found"
+			});
+		}
+
+
+		[Authorize]
+		public async Task<IActionResult> DeleteAddress(int id)
+		{
+			var Acc = DB.Accounts.Include(a => a.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
+			if (Acc != null && Acc.HasAddress(id))
+			{
+                Address address = DB.Addresses.Find(id);
+                DB.Addresses.Remove(address);
+				DB.SaveChanges();
+				return Json(new
+				{
+					Success = true,
+					Message = "Deleted successfully"
+				});
+			}
+			return Json(new
+			{
+				Success = false,
+				Message = "Not found"
+			});
+		}
+
+
+		[Authorize]
         public async Task<IActionResult> SetDefaultAddress(int id)
         {
             Account? account = DB.Accounts.Include(a => a.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
-            if (account.HasAddress(id))
+            Address defaultAddress = account.Addresses.Where(a => a.IsDefault == true).Select(a=>a).FirstOrDefault();
+            if (account.HasAddress(id) && defaultAddress != null)
             {
-                account.SelectedAddressId = id;
+                Address? address = DB.Addresses.Find(id);
+                defaultAddress.IsDefault = false;
+                address.IsDefault = true;
                 DB.SaveChanges();
                 return Json(new
                 {

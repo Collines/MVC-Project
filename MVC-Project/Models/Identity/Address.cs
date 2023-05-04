@@ -27,11 +27,11 @@ namespace MVC_Project.Models.Identity
         [RegularExpression("^(([0-9]*)|(([0-9]*)\\.([0-9]*)))$", ErrorMessage = "Zipcode should be a number")]
         public required string Zipcode { get; set; }
 
+        public bool IsDefault { get; set; }
+
         [ForeignKey("Account")]
         [Required]
         public int AccountId { get; set; }
         public virtual Account? Account { get; set; }
-
-        public bool IsDefault() => Id == Account?.SelectedAddressId;
-    }
+	}
 }

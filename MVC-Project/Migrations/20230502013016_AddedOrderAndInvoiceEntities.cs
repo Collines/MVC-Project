@@ -49,7 +49,7 @@ namespace MVC_Project.Migrations
                         column: x => x.CustomerId,
                         principalTable: "Accounts",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.NoAction);
                     table.ForeignKey(
                         name: "FK_Orders_Addresses_AddressId",
                         column: x => x.AddressId,

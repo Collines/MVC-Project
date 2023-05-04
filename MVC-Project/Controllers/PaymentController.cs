@@ -30,15 +30,15 @@ namespace MVC_Project.Controllers
         [HttpGet("Payment/PaymentWithPaypal/{CartId:int}")]
         public ActionResult PaymentWithPaypal(int CartId, string Cancel = null, string blogId = "", string PayerID = "", string guid = "")
         {
-            Cart? cart = Context.Carts.Include(C => C.Account).Include(c => c.CartItems).ThenInclude(ci => ci.Product)/*.Include(C => C.CartItems)*/.FirstOrDefault(C => C.Id == CartId);
-            string? email = User.Claims.FirstOrDefault()?.Value;
+            Cart? cart = Context.Carts.Include(C => C.Account).ThenInclude(a=>a.Addresses).Include(c=>c.CartItems).ThenInclude(ci=>ci.Product)/*.Include(C => C.CartItems)*/.FirstOrDefault(C => C.Id == CartId);
+            string? accid = User.Claims.FirstOrDefault()?.Value;
             Models.Order.Order? order = Context.Orders.Find(httpContextAccessor?.HttpContext?.Session.GetInt32("order"));
 
             bool valid = false;
-            if (cart != null && email != null)
+            if (cart != null && accid != null)
             {
                 // checking if cart account is the same as logged account
-                if (cart.Account?.Email == email)
+                if (cart.AccountId.ToString() == accid)
                     valid = true;
             }
             if (valid)
@@ -111,8 +111,11 @@ namespace MVC_Project.Controllers
                     }
                     catch (Exception e)
                     {
-                        order.OrderStatus = OrderStatus.Failed;
-                        Context.SaveChanges();
+                        if (order != null)
+                        {
+                            order.OrderStatus = OrderStatus.Failed;
+                            Context.SaveChanges();
+                        }
                         return View("PaymentFailed");
                     }
 
@@ -157,7 +160,6 @@ namespace MVC_Project.Controllers
                     quantity = $"{ci.Quantity}",
                     sku = $"{ci.ProductSKU}"
                 });
-                //totalPrice += ci.PriceAfterDiscount*ci.Quantity;
             }
 
             //itemList.items.Add(new Item()
@@ -200,29 +202,36 @@ namespace MVC_Project.Controllers
 
             //};
 
-            Models.Order.Invoice inv = new()
-            {
-                InvoiceNumber = invoicenum,
-                TotalPaid = Convert.ToDecimal(cart.GetTotalPrice()),
-                Currency = "USD",
-            };
-            Context.Add(inv);
-            Context.SaveChanges();
-            var user = Context.Accounts.FirstOrDefault(a => a.Id == cart.AccountId);
-            Models.Order.Order order = new()
+            //Models.Order.Invoice inv = new()
+            //{
+            //    InvoiceNumber = invoicenum,
+            //    TotalPaid = Convert.ToDecimal(cart.GetTotalPrice()),
+            //    Currency = "USD",
+            //    AccountId = cart.AccountId,
+            //};
+            //Context.Add(inv);
+            //Context.SaveChanges();
+            Models.Order.Order order = new Models.Order.Order()
             {
                 CustomerId = cart.AccountId,
-                AddressId = user.SelectedAddressId,
+                AddressId = cart.Account.SelectedAddress(),
                 CartId = cart.Id,
-                OrderStatus = OrderStatus.PendingPayment,
-                PaymentMethod = PaymentMethod.Paypal,
+                OrderStatus = Models.Order.OrderStatus.PendingPayment,
+                PaymentMethod = Models.Order.PaymentMethod.Paypal,
                 TotalPaid = cart.GetTotalPrice(),
-                InvoiceId = inv.Id
-            };
-
+                Invoice = new()
+				{
+					InvoiceNumber = invoicenum,
+					TotalPaid = Convert.ToDecimal(cart.GetTotalPrice()),
+					Currency = "USD",
+					AccountId = cart.AccountId
+				}
+		    };
             Context.Orders.Add(order);
             Context.SaveChanges();
-            httpContextAccessor.HttpContext.Session.SetInt32("order", order.Id);
+            order.Invoice.OrderId = order.Id;
+            Context.SaveChanges();
+            httpContextAccessor?.HttpContext?.Session.SetInt32("order", order.Id);
             // Adding description about the transaction  
             transactionList.Add(new Transaction()
             {

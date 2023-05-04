@@ -21,51 +21,49 @@ namespace MVC_Project.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            Account? owner = Context.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
-            Cart? cart = Context.Carts.Include(c => c.CartItems).ThenInclude(ci => ci.Product).ThenInclude(p => p.Images).FirstOrDefault(C => C.AccountId == owner.Id);
+            Cart? cart = Context.Carts.Include(c=>c.CartItems).ThenInclude(ci=>ci.Product).ThenInclude(p=>p.Images).FirstOrDefault(C => C.AccountId.ToString() == User.Claims.FirstOrDefault().Value);
             return View(cart);
         }
 
         [Authorize]
         public IActionResult Checkout()
         {
-            Account? owner = Context.Accounts.FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
-            Cart cart = Context.Carts.Include(c => c.CartItems).ThenInclude(ci => ci.Product).ThenInclude(p => p.Images).FirstOrDefault(C => C.AccountId == owner.Id);
+            Cart cart = Context.Carts.Include(c=>c.CartItems).ThenInclude(ci=>ci.Product).ThenInclude(p=>p.Images).FirstOrDefault(C => C.AccountId.ToString() == User.Claims.FirstOrDefault().Value);
             return View(cart);
         }
 
         [Authorize]
         [HttpPost]
 
-        public IActionResult UpdateCart(Dictionary<int, CartItem>? cartItems)
-        {
-            if (cartItems != null)
-            {
-                if (cartItems.Any())
-                {
-                    foreach (var item in cartItems.Values)
-                    {
-                        var cartItem = Context.CartItems.Find(item.Id);
-                        if (cartItem != null)
-                        {
-                            if (item.Quantity > 0)
-                            {
-                                cartItem.Quantity = item.Quantity;
-                            }
-                            else
-                            {
-                                Context.Remove(cartItem);
-                            }
-                        }
-                    }
-                }
-                Context.SaveChanges();
-            }
+		public IActionResult UpdateCart(Dictionary<int, CartItem>? cartItems)
+		{
+			if (cartItems != null)
+			{
+				if (cartItems.Any())
+				{
+					foreach (var item in cartItems.Values)
+					{
+						var cartItem = Context.CartItems.Find(item.Id);
+						if (cartItem != null)
+						{
+							if (item.Quantity > 0)
+							{
+								cartItem.Quantity = item.Quantity;
+							}
+							else
+							{
+								Context.Remove(cartItem);
+							}
+						}
+					}
+				}
+				Context.SaveChanges();
+			}
 
-            return RedirectToAction(nameof(Index));
-        }
+			return RedirectToAction(nameof(Index));
+		}
 
-        [Authorize]
+		[Authorize]
         public IActionResult RemoveCartItem(int id)
         {
             var cartItem = Context.CartItems.Find(id);
@@ -124,11 +122,8 @@ namespace MVC_Project.Controllers
 
                                 Context.CartItems.Add(cartItem);
                             }
-                            Context.SaveChanges();
-
                             cart.TotalPrice = cart.GetTotalPrice();
                             cart.DiscountedPrice = cart.GetDiscountedPrice();
-
                             Context.SaveChanges();
 
                             var updatedCartItems = Context.CartItems.Where(ci => ci.CartId == cart.Id).Include(ci => ci.Product).ThenInclude(p => p.Images).Select(ci => new
@@ -149,7 +144,51 @@ namespace MVC_Project.Controllers
                             };
 
                             return Json(updatedCart);
-                        }
+                        } else
+                        {
+                            cart = new()
+                            {
+                                AccountId = account.Id,
+                                IsActive = true
+                            };
+                            Context.Add(cart);
+                            Context.SaveChanges();
+							CartItem cartItem = new CartItem()
+							{
+								ProductId = product.ProductId,
+								Quantity = 1,
+								Price = product.Price,
+								Discount = product.Discount,
+								PriceAfterDiscount = product.PriceAfterDiscount(),
+								DiscountedPrice = product.DiscountedAmount(),
+								ProductSKU = product.SKU ?? "",
+								CartId = cart.Id,
+							};
+
+							Context.CartItems.Add(cartItem);
+							Context.SaveChanges();
+							cart.TotalPrice = cart.GetTotalPrice();
+							cart.DiscountedPrice = cart.GetDiscountedPrice();
+							Context.SaveChanges();
+							var updatedCartItems = Context.CartItems.Where(ci => ci.CartId == cart.Id).Include(ci => ci.Product).ThenInclude(p => p.Images).Select(ci => new
+							{
+								id = ci.Id,
+								name = ci.Product.ProductName,
+								quantity = ci.Quantity,
+								priceAfterDiscount = ci.PriceAfterDiscount,
+								productId = ci.ProductId,
+								ImageURI = ImageHandler.GetImageURI(ci.Product.GetMainImage())
+							}).ToList();
+
+							var updatedCart = new
+							{
+								CartCount = cart.CartItems.Count,
+								CartTotalPrice = cart.GetTotalPrice(),
+								CartItems = updatedCartItems
+							};
+
+							return Json(updatedCart);
+						}
                     }
                 }
             }
@@ -190,15 +229,9 @@ namespace MVC_Project.Controllers
                             if (cartItem != null)
                             {
                                 if (cartItem.Quantity > 1)
-                                {
                                     cartItem.Quantity--;
-                                }
                                 else
-                                {
                                     Context.Remove(cartItem);
-                                }
-
-                                Context.SaveChanges();
                             }
 
                             cart.TotalPrice = cart.GetTotalPrice();
