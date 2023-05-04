@@ -1,0 +1,21 @@
+﻿@model ICollection<MVC_Project.Models.Identity.Address>
+
+@if (Model.Any())
+{
+    <div class="mb-3">
+        <label for="addressSelect" class="form-label">Select Address</label>
+        <select class="form-select" id="addressSelect" name="AddressId">
+            @foreach (var address in Model)
+            {
+                @if (address.Id == Model.First().Id)
+                {
+                    <option value="@address.Id" selected>@address.Addr, @address.TownCity, @address.State, @address.Zipcode</option>
+                }
+                else
+                {
+                    <option value="@address.Id">@address.Addr, @address.TownCity, @address.State, @address.Zipcode</option>
+                }       
+            }
+        </select>
+    </div>
+}
