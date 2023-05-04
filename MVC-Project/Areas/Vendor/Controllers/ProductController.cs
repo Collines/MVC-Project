@@ -31,6 +31,19 @@ namespace MVC_Project.Areas.Vendor.Controllers
             return View(await appDBContext.ToListAsync());
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> Index(string term)
+        {
+
+            var appDBContext =
+                _context.Products.Include(p => p.Brand).Include(p => p.SubCategory)
+                .Where(p => p.ProductName.Contains(term));
+            return View(await appDBContext.ToListAsync());
+        }
+
+
+
         // GET: Vendor/Product/Details/5
         public async Task<IActionResult> Details(int? id)
         {

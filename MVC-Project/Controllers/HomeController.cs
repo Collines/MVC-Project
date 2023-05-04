@@ -43,5 +43,25 @@ namespace MVC_Project.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        //[HttpPost]
+        public async Task<IActionResult> SearchResult(string term)
+        {
+            ViewData["getproduct"] = term  ;
+            var produ_query = _context.Products
+                .Include(P => P.SubCategory).AsNoTracking()
+                .Where(p => p.ProductName.Contains(term)).ToListAsync();
+              ViewData["products"] = await produ_query;
+           
+
+
+           var  subcat = _context.Subcategories.Include(p=>p.Products)
+               .ToList();
+            //ViewBag.students = students;
+           
+
+
+            return View("SearchResult", subcat);
+        }
+   
     }
 }

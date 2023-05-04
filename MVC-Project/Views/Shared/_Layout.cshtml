@@ -1,5 +1,6 @@
 ﻿@using Microsoft.EntityFrameworkCore;
 @using shopping.Models;
+@using MVC_Project.Helpers;
 @{
     AppDBContext DB = new AppDBContext();
     IEnumerable<Category> Categories = DB.Categories.Include(C=>C.SubCategories).ToList();
@@ -81,20 +82,20 @@
                         <!-- Begin Header Middle Right Area -->
                         <div class="col-lg-9 pl-0 ml-sm-15 ml-xs-15">
                             <!-- Begin Header Middle Searchbox Area -->
-                            <form action="#" class="hm-searchbox">
-                                <select class="nice-select select-search-category">
+                        <form method="get" class="hm-searchbox" asp-action="SearchResult" asp-controller="Home">
+                           @* <select class="nice-select select-search-category">
                                 @foreach (Category cat in Categories)
                                 {
                                     <p>test paragraph</p>
                                      <optgroup label="@cat.CategoryName">
                                         @foreach(Subcategory sCat in cat.SubCategories)
                                         {
-                                            <option value="@sCat.SubCategoryId">@sCat.SubCategoryName</option>
+                                            <option value="@sCat.SubCategoryId">@sCat.SubCategoryName </option>
                                         }
                                     </optgroup>
                                 }
-                                </select>
-                                <input type="text" placeholder="Enter your search key ...">
+                                </select>*@
+                            <input type="text" name="term" placeholder="Enter your search key ..." value=" @ViewData["getproduct"]" >
                                 <button class="li-btn" type="submit"><i class="fa fa-search"></i></button>
                             </form>
                             <!-- Header Middle Searchbox Area End Here -->
@@ -192,7 +193,7 @@
                                                         <a href="#">@category.CategoryName</a>
                                                         <ul class="hb-dropdown hb-sub-dropdown">
                                                             @foreach(Subcategory subcategory in category.SubCategories){
-                                                                <li><a href="/Subcategory/@subcategory.SubCategoryId">@subcategory.SubCategoryName</a></li>
+                                                            <li><a href="/Category/Categores/@subcategory.SubCategoryId">@subcategory.SubCategoryName</a></li>
                                                             }
                                                         </ul>
                                                     </li>

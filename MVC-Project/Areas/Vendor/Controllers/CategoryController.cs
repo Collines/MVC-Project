@@ -30,6 +30,18 @@ namespace MVC_Project.Areas.Vendor.Controllers
                           Problem("Entity set 'AppDBContext.Categories'  is null.");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Index( string term)
+        {
+
+
+            return
+            View(await _context.Categories.Where(p => p.CategoryName.Contains(term))
+            .ToListAsync());
+                
+        }
+
+
         // GET: Vendor/Category/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -28,6 +28,18 @@ namespace MVC_Project.Areas.Vendor.Controllers
             var appDBContext = _context.Subcategories.Include(s => s.Category);
             return View(await appDBContext.ToListAsync());
         }
+        [HttpPost]
+        public async Task<IActionResult> Index(string term)
+        {
+
+
+            return
+            View(await _context.Subcategories.Include(s => s.Category)
+            .Where(p => p.SubCategoryName.Contains(term))
+            .ToListAsync());
+
+        }
+
 
         // GET: Vendor/Subcategory/Details/5
         public async Task<IActionResult> Details(int? id)

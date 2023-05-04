@@ -16,7 +16,7 @@ namespace MVC_Project
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-VREBPAN\\MSSQLSERVER17;Initial Catalog=Shop-DB;Integrated Security=True;Pooling=False;Encrypt=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=Shop-DB;Integrated Security=True;Pooling=False;Encrypt=True;TrustServerCertificate=True");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

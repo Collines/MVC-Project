@@ -30,6 +30,17 @@ namespace MVC_Project.Areas.Vendor.Controllers
                           Problem("Entity set 'AppDBContext.Brands'  is null.");
         }
 
+
+
+        [HttpPost]
+        public async Task<IActionResult> Index(string term)
+        {
+       
+            return View(await _context.Brands
+                .Where(p => p.Name.Contains(term)).ToListAsync());
+        }
+
+
         // GET: Vendor/Brand/Details/5
         public async Task<IActionResult> Details(int? id)
         {
