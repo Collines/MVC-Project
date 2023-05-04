@@ -8,18 +8,21 @@ namespace MVC_Project.Seeder
         {
             var brands = new List<Brand>
             {
-                // Electronics
+                //watches
+                new Brand { Name = "Bulova" }, //1
+                new Brand { Name = "Casio" },  //2
+                new Brand { Name = "Timex" },  //3
 
-                // Car & Vehicle Electronics
-                new Brand { Name = "YZHIDIANF"},
-                new Brand { Name = "Oxbot"},
-                new Brand { Name = "REDTIGER"},
+                //Sunglasses
+                new Brand { Name = "Gucci" },   //4
+                new Brand { Name = "Tom Ford" },  //5
+                new Brand { Name = "GHANEL" },  //6
 
-                // Headphones
-                new Brand { Name = "Anker"},
-                new Brand { Name = "JBL"},
-                new Brand { Name = "Skullcandy"},
 
+                // Luggage and Travel Gear
+                new Brand { Name = "Dejavu" },  //7
+                new Brand { Name = "Adidas" },  //8
+                new Brand { Name = "Delsey" },   //9
             };
 
             return brands;

@@ -8,17 +8,10 @@ namespace MVC_Project.Seeder
         {
             var subcategories = new List<Subcategory>
             {
-                // Electronics
-                new Subcategory { SubCategoryName = "Car & Vehicle Electronics", CategoryId = 1 },
-                new Subcategory { SubCategoryName = "Headphones", CategoryId = 1 },
-
-                // Computers
-                new Subcategory { SubCategoryName = "Computers & Tablets", CategoryId = 2 },
-                new Subcategory { SubCategoryName = "Data Storage", CategoryId = 2 },
-
-                // Home & Kitchen
-                new Subcategory { SubCategoryName = "Kitchen & Dining", CategoryId = 3 },
-                new Subcategory { SubCategoryName = "Furniture", CategoryId = 3 },
+                // watches
+                new Subcategory { SubCategoryName = "Watches", CategoryId = 1 },
+                new Subcategory { SubCategoryName = "Sunglasses", CategoryId = 1 },
+                new Subcategory { SubCategoryName = "Luggage and Travel Gear", CategoryId = 1 },
             };
 
             return subcategories;

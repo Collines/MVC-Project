@@ -8,9 +8,7 @@ namespace MVC_Project.Seeder
         {
             var categories = new List<Category>
             {
-                new Category { CategoryName = "Electronics" },
-                new Category { CategoryName = "Computers" },
-                new Category { CategoryName = "Home and Kitchen" }
+                new Category { CategoryName = "Fashion" },
             };
 
             return categories;
