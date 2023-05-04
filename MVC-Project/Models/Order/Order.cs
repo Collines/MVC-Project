@@ -35,7 +35,7 @@ namespace MVC_Project.Models.Order
         public required int CartId { get; set; }
 
         [EnumDataType(typeof(OrderStatus))]
-        public OrderStatus? OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
 
         [DataType(DataType.Currency)]
         public required double TotalPaid { get; set; }
