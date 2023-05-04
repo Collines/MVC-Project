@@ -28,6 +28,7 @@ namespace MVC_Project.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
+                ViewBag.Orders = DB.Orders.IgnoreQueryFilters().Include(O=>O.Cart).ThenInclude(c=>c.CartItems).ThenInclude(ci=>ci.Product).ThenInclude(P=>P.Images).Where(o => o.CustomerId.ToString() == User.FindFirst("AccountId").Value).OrderByDescending(o=>o.Id).ToList();
                 return View(DB.Accounts.Include(A => A.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value));
             }
             return RedirectToAction("Login");
@@ -86,7 +87,42 @@ namespace MVC_Project.Controllers
             return View();
         }
 
-        [HttpPost]
+        [Authorize]
+		public async Task<IActionResult> UpdateAccount(Account account,string CurrentPassword, string NewPassword, string ConfirmNewPassword)
+        {
+            if(account.Id.ToString() == User.FindFirst("AccountId").Value)
+            {
+                var acc = DB.Accounts.Find(account.Id);
+                if (acc != null)
+                {
+                    acc.Firstname = account.Firstname??acc.Firstname;
+                    acc.Lastname = account.Lastname ?? acc.Lastname;
+                    if (!String.IsNullOrEmpty(CurrentPassword))
+                    {
+                        if (PasswordHandler.VerifyPassword(CurrentPassword, acc.Password, Convert.FromHexString(acc.HashSalt)))
+                        {
+                            if (NewPassword == ConfirmNewPassword)
+                            {
+                                acc.Password = PasswordHandler.Hash(NewPassword, out byte[] Salt);
+                                acc.HashSalt = Convert.ToHexString(Salt);
+                            }
+
+                        }
+                        else
+                        {
+							ModelState.AddModelError("CurrentPassword", "Password is wrong");
+                            //RedirectToAction("Dashboard");
+						}
+                    }
+                    DB.SaveChanges();
+					return RedirectToAction("Dashboard");
+				}
+			}
+            return RedirectToAction("Dashboard");
+        }
+
+
+		[HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
             Account? account = DB.Accounts.FirstOrDefault(A => A.Email == email);
@@ -109,7 +145,11 @@ namespace MVC_Project.Controllers
                     return RedirectToAction("Dashboard");
                 }
                 else
-                    return View();
+                {
+                    ModelState.AddModelError("Email", "Incorrect Credentials");
+                    ModelState.AddModelError("Password", "Incorrect Credentials");
+					return View();
+				}
             }
             return View();
 
