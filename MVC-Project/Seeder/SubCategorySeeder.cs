@@ -19,6 +19,12 @@ namespace MVC_Project.Seeder
                 // Home & Kitchen
                 new Subcategory { SubCategoryName = "Kitchen & Dining", CategoryId = 3 },
                 new Subcategory { SubCategoryName = "Furniture", CategoryId = 3 },
+
+                //Phones and Tablets
+                new Subcategory { SubCategoryName = "Smart Phones", CategoryId = 4 },
+                new Subcategory { SubCategoryName = "Tablets", CategoryId = 4 },
+                new Subcategory { SubCategoryName = "Smart Watches", CategoryId = 4 },
+
             };
 
             return subcategories;

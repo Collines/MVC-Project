@@ -10,7 +10,9 @@ namespace MVC_Project.Seeder
             {
                 new Category { CategoryName = "Electronics" },
                 new Category { CategoryName = "Computers" },
-                new Category { CategoryName = "Home and Kitchen" }
+                new Category { CategoryName = "Home and Kitchen" },
+                new Category { CategoryName = "Phones and Tablets" }
+
             };
 
             return categories;

@@ -20,6 +20,24 @@ namespace MVC_Project.Seeder
                 new Brand { Name = "JBL"},
                 new Brand { Name = "Skullcandy"},
 
+                //Smart Phones
+                new Brand { Name = "OPPO"},
+                new Brand { Name = "Samsung"},                
+                new Brand { Name = "Infinix"},
+
+                //Tablets
+                new Brand { Name = "Lenovo"},
+                new Brand { Name = "Huawei"},                
+                new Brand { Name = "Nokia"},
+
+                //Smart Watches
+                new Brand { Name = "Apple"},                
+                new Brand { Name = "Amazfit"},                
+                new Brand { Name = "Bml"},
+
+
+
+
             };
 
             return brands;
