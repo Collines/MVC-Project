@@ -1,0 +1,40 @@
+﻿@model MVC_Project.Models.Identity.Address
+
+<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addAddressModalLabel">Add Address</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="addAddressForm" method="post" asp-action="AddAddress">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="addr" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="addr" name="Addr" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="appartmentSuite" class="form-label">Appartment/Suite (ex: 10, 10.10)</label>
+                        <input type="text" class="form-control" id="appartmentSuite" name="AppartmentSuite" maxlength="5" pattern="^(([0-9]*)|(([0-9]*)\.([0-9]*)))$">
+                    </div>
+                    <div class="mb-3">
+                        <label for="townCity" class="form-label">Town/City</label>
+                        <input type="text" class="form-control" id="townCity" name="TownCity" required maxlength="50">
+                    </div>
+                    <div class="mb-3">
+                        <label for="state" class="form-label">State</label>
+                        <input type="text" class="form-control" id="state" name="State" required maxlength="50">
+                    </div>
+                    <div class="mb-3">
+                        <label for="zipcode" class="form-label">Zipcode (ex: 010101, 202020)</label>
+                        <input type="text" class="form-control" id="zipcode" name="Zipcode" required maxlength="50" pattern="^(([0-9]*)|(([0-9]*)\.([0-9]*)))$">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Address</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
