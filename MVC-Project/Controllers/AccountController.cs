@@ -199,13 +199,13 @@ namespace MVC_Project.Controllers
         }
 
         [Authorize]
-		public async Task<IActionResult> EditAddress(int id,string address, string appartmentSuite, string townCity, string State, string Zipcode)
+		public async Task<IActionResult> EditAddress(int id,string Address, string appartmentSuite, string townCity, string State, string Zipcode)
 		{
 			var Acc = DB.Accounts.Include(a=>a.Addresses).FirstOrDefault(A => A.Id.ToString() == User.Claims.FirstOrDefault().Value);
             if(Acc!=null && Acc.HasAddress(id))
             {
                 var EditedAddress = DB.Addresses.FirstOrDefault(a => a.Id == id && a.AccountId == Acc.Id);
-                EditedAddress.Addr = address ?? EditedAddress.Addr;
+                EditedAddress.Addr = Address ?? EditedAddress.Addr;
                 EditedAddress.AppartmentSuite = appartmentSuite ?? EditedAddress.AppartmentSuite;
                 EditedAddress.TownCity = townCity ?? EditedAddress.TownCity;
                 EditedAddress.State = State ?? EditedAddress.State;

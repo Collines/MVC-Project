@@ -221,26 +221,26 @@
 																						<div class="card card-body">
 																							<div class="form-row">
 																								<div class="form-group col-md-8">
-																									<label for="Address">Address</label>
-																									<input type="text" class="form-control" id="EditedAddress" name="Addr" value="@A.Addr" wfd-id="id1">
+																									<label for="EditedAddress">Address</label>
+																									<input type="text" class="form-control" id="EditedAddressStr-@A.Id" name="Edited_Address" value="@A.Addr" wfd-id="id1">
 																								</div>
 																								<div class="form-group col-md-4">
 																									<label for="AppartmentSuite">AppartmentSuite</label>
-																									<input type="text" class="form-control" id="EditedAppartmentSuite" value="@A.AppartmentSuite" name="AppartmentSuite" wfd-id="id2">
+																									<input type="text" class="form-control" id="EditedAppartmentSuite-@A.Id" value="@A.AppartmentSuite" name="AppartmentSuite" wfd-id="id2">
 																								</div>
 																							</div>
 																							<div class="form-row">
 																								<div class="form-group col-md-6">
 																									<label for="TownCity">Town/City</label>
-																									<input type="text" class="form-control" id="EditedTownCity" value="@A.TownCity" name="TownCity" wfd-id="id3">
+																									<input type="text" class="form-control" id="EditedTownCity-@A.Id" value="@A.TownCity" name="TownCity" wfd-id="id3">
 																								</div>
 																								<div class="form-group col-md-4">
 																									<label for="inputState">State</label>
-																									<input type="text" class="form-control" id="EditedinputState" value="@A.State" name="State" wfd-id="id4">
+																									<input type="text" class="form-control" id="EditedinputState-@A.Id" value="@A.State" name="State" wfd-id="id4">
 																								</div>
 																								<div class="form-group col-md-2">
 																									<label for="inputZip">Zip</label>
-																									<input type="text" class="form-control" id="EditedinputZip" value="@A.Zipcode" name="Zipcode" wfd-id="id5">
+																									<input type="text" class="form-control" id="EditedinputZip-@A.Id" value="@A.Zipcode" name="Zipcode" wfd-id="id5">
 																								</div>
 																							</div>
 																						</div>
@@ -405,16 +405,17 @@
 
 			$(".EditAddressBtn").click(function () {
 				var addressId = $(this).attr("data-id");
+				debugger;
 				$.ajax(
 					{
 						type: "POST", //HTTP POST Method
 						url: "/Account/EditAddress/" + addressId, // Controller/View
 						data: { //Passing data
-							Address: $("#EditedAddress").val(),
-							AppartmentSuite: $("#EditedAppartmentSuite").val(),
-							TownCity: $("#EditedTownCity").val(),
-							State: $("#EditedinputState").val(),
-							Zipcode: $("#EditedinputZip").val()
+							Address: $("#EditedAddressStr-" + addressId).val(),
+							AppartmentSuite: $("#EditedAppartmentSuite-" + addressId).val(),
+							TownCity: $("#EditedTownCity-" + addressId).val(),
+							State: $("#EditedinputState-" + addressId).val(),
+							Zipcode: $("#EditedinputZip-" + addressId).val()
 						},
 						success: function (result) {
 							$("#ResponseMsg").toggle().text(result.message)
