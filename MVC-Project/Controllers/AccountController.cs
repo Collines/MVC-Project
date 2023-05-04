@@ -101,7 +101,7 @@ namespace MVC_Project.Controllers
                     {
                         if (PasswordHandler.VerifyPassword(CurrentPassword, acc.Password, Convert.FromHexString(acc.HashSalt)))
                         {
-                            if (NewPassword == ConfirmNewPassword)
+                            if (!String.IsNullOrEmpty(NewPassword) && NewPassword == ConfirmNewPassword)
                             {
                                 acc.Password = PasswordHandler.Hash(NewPassword, out byte[] Salt);
                                 acc.HashSalt = Convert.ToHexString(Salt);
