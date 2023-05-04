@@ -27,7 +27,6 @@ namespace MVC_Project
                 options.SlidingExpiration = true;
                 options.AccessDeniedPath = "/Home/Forbidden";
                 options.LoginPath = "/Account/Login";
-                //options.ReturnUrlParameter = "/Account/Dashboard";
             });
 
             builder.Services.AddDistributedMemoryCache();
@@ -78,7 +77,6 @@ namespace MVC_Project
                 }
             });
 
-            //app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

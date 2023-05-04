@@ -1,4 +1,7 @@
 ﻿@using MVC_Project.Models.Identity;
+@using MVC_Project.Models.Order;
+@using MVC_Project.Models.Cart
+@using MVC_Project.Helpers;
 @model Account;
 @{
 	<main class="main">
@@ -53,8 +56,76 @@
 									</div><!-- .End .tab-pane -->
 
 									<div class="tab-pane fade" id="tab-orders" role="tabpanel" aria-labelledby="tab-orders-link">
-										<p>No order has been made yet.</p>
-										<a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
+										@if(ViewBag.Orders.Count == 0)
+										{
+											<p>No order has been made yet.</p>
+										} else
+										{
+											int counter = 0;
+											foreach(Order order in ViewBag.Orders)
+											{
+												if(counter == 0)
+												{
+													<div class="card">
+														<div class="card-header" id="headingOne">
+															<h5 class="mb-0">
+																<button class="btn btn-link" data-toggle="collapse" data-target="#Order-Collapse-@order.Id" aria-expanded="true" aria-controls="collapseOne">
+																	@order.Cart.CartItems.FirstOrDefault().Product.ProductName  &nbsp;&nbsp;&nbsp; @if(order.OrderStatus == OrderStatus.Completed)
+																	{
+																		<span class="text-success">EGP @order.TotalPaid</span>
+																	}
+																	else if (order.OrderStatus == OrderStatus.Failed)
+																	{
+																		<span class="text-danger">Failed</span>
+																	}
+																</button>
+															</h5>
+														</div>
+
+														<div id="Order-Collapse-@order.Id" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+															<div class="card-body">
+																@foreach(CartItem ci in order.Cart.CartItems)
+																{
+																	<div class="my-3 border p-3">
+																		<a href="/Product/Details/@ci.Product.ProductId"><img style="width:80px;height:80px;" src="@ImageHandler.GetImageURI(ci.Product.GetMainImage())" class="rounded" alt="...">&nbsp;&nbsp; x @ci.Quantity    Price: @ci.PriceAfterDiscount</a>
+																	</div>
+																}
+															</div>
+														</div>
+													</div>
+												} else
+												{
+													<div class="card">
+														<div class="card-header" id="headingOne">
+															<h5 class="mb-0">
+																<button class="btn btn-link" data-toggle="collapse" data-target="#Order-Collapse-@order.Id" aria-expanded="true" aria-controls="collapseOne">
+																	@order.Cart.CartItems.FirstOrDefault().Product.ProductName  &nbsp;&nbsp;&nbsp; @if (order.OrderStatus == OrderStatus.Completed)
+																	{
+																		<span class="text-success">EGP @order.TotalPaid</span>
+																	}
+																	else if (order.OrderStatus == OrderStatus.Failed)
+																	{
+																		<span class="text-danger">Failed</span>
+																	}
+																</button>
+															</h5>
+														</div>
+
+														<div id="Order-Collapse-@order.Id" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+															<div class="card-body">
+																@foreach (CartItem ci in order.Cart.CartItems)
+																{
+																	<div class="my-3 border p-3">
+																		<a href="/Product/Details/@ci.Product.ProductId"><img style="width:80px;height:80px;" src="@ImageHandler.GetImageURI(ci.Product.GetMainImage())" class="rounded" alt="...">&nbsp;&nbsp; x @ci.Quantity    Price: @ci.PriceAfterDiscount</a>
+																	</div>
+																}
+															</div>
+														</div>
+													</div>
+												}
+												counter++;
+											}
+										}
 									</div><!-- .End .tab-pane -->
 
 
@@ -223,34 +294,36 @@
 									</div><!-- .End .tab-pane -->
 
 									<div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="tab-account-link">
-										<form action="#">
-											<div class="row">
+										<form action="/Account/UpdateAccount" method="post">
+											<div asp-validation-summary="All"></div>
+											<div class="row mb-3">
+												<input type="hidden" name="Id" value="@Model.Id">
 												<div class="col-sm-6">
-													<label>First Name *</label>
-													<input type="text" class="form-control" required>
+													<label asp-for="Firstname"></label>
+													<input asp-for="Firstname" class="form-control" value="@Model.Firstname" />
+													<span asp-validation-for="Firstname" class="text-danger"></span>
+													
 												</div><!-- End .col-sm-6 -->
 
 												<div class="col-sm-6">
-													<label>Last Name *</label>
-													<input type="text" class="form-control" required>
+													<label asp-for="Lastname"></label>
+													<input asp-for="Lastname" class="form-control"  value="@Model.Lastname" />
+													<span asp-validation-for="Lastname" class="text-danger"></span>
 												</div><!-- End .col-sm-6 -->
 											</div><!-- End .row -->
-
-											<label>Display Name *</label>
-											<input type="text" class="form-control" required>
-											<small class="form-text">This will be how your name will be displayed in the account section and in reviews</small>
-
-											<label>Email address *</label>
-											<input type="email" class="form-control" required>
-
+											<label asp-for="Email"></label>
+											<input asp-for="Email" class="mb-3 form-control" value="@Model.Email" disabled/>
+											<span asp-validation-for="Email" class="text-danger"></span>
+											<br>
+											
 											<label>Current password (leave blank to leave unchanged)</label>
-											<input type="password" class="form-control">
+											<input type="password" class="mb-3 form-control" name="CurrentPassword">
 
 											<label>New password (leave blank to leave unchanged)</label>
-											<input type="password" class="form-control">
+											<input type="password" class="mb-3 form-control" name="NewPassword">
 
 											<label>Confirm new password</label>
-											<input type="password" class="form-control mb-2">
+											<input type="password" class="mb-3 form-control" name="ConfirmNewPassword">
 
 											<button type="submit" class="btn btn-outline-primary-2">
 												<span>SAVE CHANGES</span>
