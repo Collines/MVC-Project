@@ -109,7 +109,7 @@
 																<h2 class="mb-0">
 																	<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapse-@A.Id" aria-expanded="true" aria-controls="collapseOne">
 																		@A.Addr @{
-																			if (A.IsDefault())
+																			if (A.IsDefault)
 																			{
 																				<span class="text-success" style="position: absolute; right: 10px;">Default</span>
 																			}
@@ -125,11 +125,88 @@
 																	<p><strong>Town/City: </strong>@A.TownCity</p>
 																	<p><strong>State: </strong>@A.State</p>
 																	<p><strong>Zipcode: </strong>@A.Zipcode</p>
-																	@if (!A.IsDefault())
+																	<p class="text-center">
+																	@if (!A.IsDefault)
 																	{
-																		<p class="text-center"><button type="button" class="btn btn-primary makeDefaultBtn" data-id="@A.Id">Make Default</button></p>
-																	}
+																		<button type="button" class="btn btn-primary makeDefaultBtn" data-id="@A.Id">Make Default</button>
+																		<button type="button" class="btn btn-info" data-toggle="modal" data-target="#EditAddressmodal-@A.Id">Edit</button>
+																			<button type="button" class="btn btn-danger DeleteAddress" data-id="@A.Id" data-toggle="modal" data-target="#DeleteAddressmodal-@A.Id">Delete</button>
+																		} else
+																		{
+																			<button type="button" class="btn btn-info" data-toggle="modal" data-target="#EditAddressmodal-@A.Id">Edit</button>
+																		}
 
+																		<!-- Edit Address Modal -->
+																		<div class="modal fade" id="EditAddressmodal-@A.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+																			<div class="modal-dialog modal-dialog-centered" role="document">
+																				<div class="modal-content">
+																					<div class="modal-header">
+																						<h5 class="modal-title" id="ModelLongtitle-@A.Id">@A.Addr</h5>
+																						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																							<span aria-hidden="true">&times;</span>
+																						</button>
+																					</div>
+																					<div class="modal-body">
+																						<div class="card card-body">
+																							<div class="form-row">
+																								<div class="form-group col-md-8">
+																									<label for="Address">Address</label>
+																									<input type="text" class="form-control" id="EditedAddress" name="Addr" value="@A.Addr" wfd-id="id1">
+																								</div>
+																								<div class="form-group col-md-4">
+																									<label for="AppartmentSuite">AppartmentSuite</label>
+																									<input type="text" class="form-control" id="EditedAppartmentSuite" value="@A.AppartmentSuite" name="AppartmentSuite" wfd-id="id2">
+																								</div>
+																							</div>
+																							<div class="form-row">
+																								<div class="form-group col-md-6">
+																									<label for="TownCity">Town/City</label>
+																									<input type="text" class="form-control" id="EditedTownCity" value="@A.TownCity" name="TownCity" wfd-id="id3">
+																								</div>
+																								<div class="form-group col-md-4">
+																									<label for="inputState">State</label>
+																									<input type="text" class="form-control" id="EditedinputState" value="@A.State" name="State" wfd-id="id4">
+																								</div>
+																								<div class="form-group col-md-2">
+																									<label for="inputZip">Zip</label>
+																									<input type="text" class="form-control" id="EditedinputZip" value="@A.Zipcode" name="Zipcode" wfd-id="id5">
+																								</div>
+																							</div>
+																						</div>
+
+																					</div>
+																					<div class="modal-footer">
+																						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+																						<button type="button" class="btn btn-primary EditAddressBtn" data-id="@A.Id" data-dismiss="modal">Save changes</button>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+																		<!-- Delete Address Modal -->
+																		<div class="modal fade" id="DeleteAddressmodal-@A.Id" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+																			<div class="modal-dialog modal-dialog-centered" role="document">
+																				<div class="modal-content">
+																					<div class="modal-header">
+																						<h5 class="modal-title" id="ModelLongtitle-@A.Id">@A.Addr</h5>
+																						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																							<span aria-hidden="true">&times;</span>
+																						</button>
+																					</div>
+																					<div class="modal-body">
+																						<div class="card card-body">
+																							Are you sure you want to delete this address?
+																						</div>
+																					</div>
+																					<div class="modal-footer">
+																						<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+																						<button type="button" class="btn btn-danger DeleteAddressBtn" data-id="@A.Id" data-dismiss="modal">Yes</button>
+																					</div>
+																				</div>
+																			</div>
+																		</div>
+
+
+																	</p>
 																</div>
 																
 															</div>
@@ -249,6 +326,39 @@
 						},
 						success: function (result) {
 							$("#ResponseMsg").toggle().text(result.message)						}
+
+					});
+			});
+
+			$(".EditAddressBtn").click(function () {
+				var addressId = $(this).attr("data-id");
+				$.ajax(
+					{
+						type: "POST", //HTTP POST Method
+						url: "/Account/EditAddress/" + addressId, // Controller/View
+						data: { //Passing data
+							Address: $("#EditedAddress").val(),
+							AppartmentSuite: $("#EditedAppartmentSuite").val(),
+							TownCity: $("#EditedTownCity").val(),
+							State: $("#EditedinputState").val(),
+							Zipcode: $("#EditedinputZip").val()
+						},
+						success: function (result) {
+							$("#ResponseMsg").toggle().text(result.message)
+						}
+
+					});
+			});
+
+			$(".DeleteAddressBtn").click(function () {
+				var addressId = $(this).attr("data-id");
+				$.ajax(
+					{
+						type: "POST", //HTTP POST Method
+						url: "/Account/DeleteAddress/" + addressId, // Controller/View
+						success: function (result) {
+							$("#ResponseMsg").toggle().text(result.message)
+						}
 
 					});
 			});
