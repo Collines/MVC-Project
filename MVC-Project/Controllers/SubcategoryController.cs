@@ -54,20 +54,23 @@ namespace MVC_Project.Controllers
 
             Product P = context.Products.Include(P => P.Images).Include(P => P.SubCategory).Include(b => b.Brand).FirstOrDefault(Pr => Pr.SubCategoryId == id);
 
-            Image img2 = context.Images.FirstOrDefault(I => I.ProductId == P.ProductId);
-            string imageDataURL = ImageHandler.GetImageURI(img2);
-
-            ViewBag.ProductImage = imageDataURL;
             if (P != null)
             {
-                List<string> Images = new();
-                foreach (Image img in P.Images)
-                {
-                    if (img != null)
-                        Images.Add(ImageHandler.GetImageURI(img));
-                }
-                ViewBag.Images = Images;
+                Image img2 = context.Images.FirstOrDefault(I => I.ProductId == P.ProductId);
+                string imageDataURL = ImageHandler.GetImageURI(img2);
 
+                ViewBag.ProductImage = imageDataURL;
+                if (P != null)
+                {
+                    List<string> Images = new();
+                    foreach (Image img in P.Images)
+                    {
+                        if (img != null)
+                            Images.Add(ImageHandler.GetImageURI(img));
+                    }
+                    ViewBag.Images = Images;
+
+                }
             }
             ViewBag.sub = s;
             ViewBag.AllProducts = AllProduct;
