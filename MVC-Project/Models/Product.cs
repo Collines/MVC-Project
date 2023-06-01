@@ -30,11 +30,11 @@ namespace shopping.Models
         public required int Quantity { get; set; }
 
         [Range(0, 100)]
-        [RegularExpression("^(([1-9]*)|(([1-9]*)\\.([0-9]*)))$")]
+        [RegularExpression("^(([.0-9]*)|(([0-9]*)))$")]
         [DefaultValue(0.00)]
         public double Discount { get; set; }
 
-        [RegularExpression("^(([1-9*)|(([1-9]*)\\.([0-9]*)))$")]
+        [RegularExpression("^(([.0-9]*)|(([0-9]*)))$")]
         [DefaultValue(0.00)]
         public double Rate { get; set; }
         public virtual ICollection<Image> Images { get; set; } = new List<Image>();
